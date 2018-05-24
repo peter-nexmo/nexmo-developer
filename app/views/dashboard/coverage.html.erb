@@ -1,0 +1,86 @@
+<center>
+    <h1>Building Block Stats</h1>
+
+    <br>
+    <div class="box">
+        <h2>Filter</h2>
+        <%= form_tag({}, {:method => :get}) do %>
+            <div>
+                Product: <%= select_tag :product,
+                    options_for_select([['All', nil]].concat(DocumentationConstraint.product_list), params[:product]),
+                    onchange: "this.form.submit();" %>
+        </div>
+    <br>
+    <%= link_to 'Reset', '/coverage' %> &nbsp;
+    <%= submit_tag 'Update', class: 'button' %>
+    <p>
+    <hr />
+        <strong>Note: This is only partially working due to the location of some building blocks</strong>
+    </p>
+<% end %>
+    </div>
+</center>
+<br>
+
+<hr />
+
+<div style="text-align: center; padding: 5px; background: red; width: 25%; float: left; color: white;">Missing block</div>
+<div style="text-align: center; padding: 5px; background: orange; width: 25%; float: left;">File based block</div>
+<div style="text-align: center; padding: 5px; background: #CCCC00; width: 25%; float:left;">Config based block</div>
+<div style="text-align: center; padding: 5px; background: green; width: 25%; color: white; float:left; margin-bottom: 8px;">Yaml based block</div>
+
+<hr style="clear:both;" />
+
+<% @complete_coverage.each do |toplevel, blocks| %>
+    <% next if @product and not toplevel == @product  %>
+    <h2><%= toplevel %></h2>
+    <% blocks.each do |section, entries| %>
+        <h3><%= section %></h3>
+        <table>
+            <thead>
+                <tr>
+                <td>Block</td>
+                <% @supported_languages.each do |lang| %>
+                    <% next if lang == 'csharp' %>
+                    <td><%= lang %></td>
+                <% end %>
+                </tr>
+            </thead>
+            <tbody>
+                    <%
+                      coverage = {}
+                      count = 0
+                    %>
+                <% entries.each do |name, languages| %>
+                    <% count += 1 %>
+                    <tr>
+                        <td style="width: 200px;"><strong><%= name %></strong></td>
+                        <% @supported_languages.each do |lang| %>
+                            <% next if lang == 'csharp' %>
+                            <% 
+                                coverage[lang] = 0 unless coverage[lang]
+                                coverage[lang] += 1 if languages[lang]
+
+                                l = languages[lang]
+                                t = l['type'] if l
+                                location = l['source_path'] if l
+                                good = 'orange' if t == 'file'
+                                good = '#CCCC00' if t == 'config'
+                                good = 'green' if t == 'yaml'
+                            %>
+                        <td title="<%= location %>" style="border: 1px solid white; background: <%= languages[lang] ? good : 'red' %>" >&nbsp</td>
+                        <% end %>
+                    </tr>
+                <% end %>
+                <tr>
+                    <td><strong>Coverage</strong></td>
+                    <% @supported_languages.each do |lang| %>
+                        <% next if lang == 'csharp' %>
+                        <td><%= coverage[lang]%>/<%= count %> (<%= (coverage[lang]/count.to_f*100).round(2) %>%)</td>
+                    <% end %>
+                </tr>
+            </tbody>
+        </table>
+    <% end %>
+    <hr>
+<% end %>

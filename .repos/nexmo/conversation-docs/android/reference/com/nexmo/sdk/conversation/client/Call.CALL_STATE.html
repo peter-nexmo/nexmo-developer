@@ -163,6 +163,8 @@
     <li class="api apilevel-">
   <a href="../../../../../com/nexmo/sdk/conversation/core/networking/package-summary.html">com.nexmo.sdk.conversation.core.networking</a></li>
     <li class="api apilevel-">
+  <a href="../../../../../com/nexmo/sdk/conversation/core/util/package-summary.html">com.nexmo.sdk.conversation.core.util</a></li>
+    <li class="api apilevel-">
   <a href="../../../../../com/nexmo/sdk/conversation/device/package-summary.html">com.nexmo.sdk.conversation.device</a></li>
     <li class="api apilevel-">
   <a href="../../../../../com/nexmo/sdk/conversation/push/package-summary.html">com.nexmo.sdk.conversation.push</a></li>
@@ -434,6 +436,34 @@ Summary:
     
     <tr class=" api apilevel-" >
         <td class="jd-descrcol"><a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>&nbsp;</td>
+        <td class="jd-linkcol">BUSY&nbsp;</td>
+        <td class="jd-descrcol" width="100%">The number being dialed was on another call.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-descrcol"><a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>&nbsp;</td>
+        <td class="jd-linkcol">COMPLETE&nbsp;</td>
+        <td class="jd-descrcol" width="100%">Call was terminated after it was successfully answered.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+        <td class="jd-descrcol"><a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>&nbsp;</td>
+        <td class="jd-linkcol">FAILED&nbsp;</td>
+        <td class="jd-descrcol" width="100%">The call failed because something went wrong, for example: the destination number was invalid.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-descrcol"><a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>&nbsp;</td>
+        <td class="jd-linkcol">MACHINE&nbsp;</td>
+        <td class="jd-descrcol" width="100%">Platform detected an answering machine.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+        <td class="jd-descrcol"><a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>&nbsp;</td>
         <td class="jd-linkcol">RINGING&nbsp;</td>
         <td class="jd-descrcol" width="100%">The destination has started ringing.&nbsp;</td>
     </tr>
@@ -443,6 +473,20 @@ Summary:
         <td class="jd-descrcol"><a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>&nbsp;</td>
         <td class="jd-linkcol">STARTED&nbsp;</td>
         <td class="jd-descrcol" width="100%">The call was initiated, but the other receivers haven't received it yet.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class=" api apilevel-" >
+        <td class="jd-descrcol"><a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>&nbsp;</td>
+        <td class="jd-linkcol">TIMEOUT&nbsp;</td>
+        <td class="jd-descrcol" width="100%">The call has timeout and has been now cancelled.&nbsp;</td>
+    </tr>
+    
+    
+    <tr class="alt-color api apilevel-" >
+        <td class="jd-descrcol"><a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>&nbsp;</td>
+        <td class="jd-linkcol">UNANSWERED&nbsp;</td>
+        <td class="jd-descrcol" width="100%">The caller cancelled the call before an answer from destination.&nbsp;</td>
     </tr>
     
     
@@ -1020,6 +1064,126 @@ From interface
 
 
 
+<a id="BUSY"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        <a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>
+      </span>
+        BUSY
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>The number being dialed was on another call. </p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="COMPLETE"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        <a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>
+      </span>
+        COMPLETE
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Call was terminated after it was successfully answered. </p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="FAILED"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        <a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>
+      </span>
+        FAILED
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>The call failed because something went wrong, for example: the destination number was invalid. </p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="MACHINE"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        <a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>
+      </span>
+        MACHINE
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>Platform detected an answering machine. </p></div>
+
+    
+    </div>
+</div>
+
+
+
 <a id="RINGING"></a>
 
 <div class="jd-details api apilevel-"> 
@@ -1073,6 +1237,66 @@ From interface
     <div class="jd-details-descr">
       
   <div class="jd-tagdata jd-tagdescr"><p>The call was initiated, but the other receivers haven't received it yet. </p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="TIMEOUT"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        <a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>
+      </span>
+        TIMEOUT
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>The call has timeout and has been now cancelled. </p></div>
+
+    
+    </div>
+</div>
+
+
+
+<a id="UNANSWERED"></a>
+
+<div class="jd-details api apilevel-"> 
+    <h4 class="jd-details-title">
+      <span class="normal">
+        public 
+        static 
+        final 
+        <a href="../../../../../com/nexmo/sdk/conversation/client/Call.CALL_STATE.html">Call.CALL_STATE</a>
+      </span>
+        UNANSWERED
+    </h4>
+      <div class="api-level">
+        
+
+
+        
+  
+
+      </div>
+    <div class="jd-details-descr">
+      
+  <div class="jd-tagdata jd-tagdescr"><p>The caller cancelled the call before an answer from destination. </p></div>
 
     
     </div>

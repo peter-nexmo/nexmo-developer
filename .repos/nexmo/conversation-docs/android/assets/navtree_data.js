@@ -28,6 +28,8 @@ var NAVTREE_DATA =
 , "" ] ]
 , "" ], [ "com.nexmo.sdk.conversation.core.networking", "com/nexmo/sdk/conversation/core/networking/package-summary.html", [ [ "Classes", null, [ [ "Constants", "com/nexmo/sdk/conversation/core/networking/Constants.html", null, "" ] ]
 , "" ] ]
+, "" ], [ "com.nexmo.sdk.conversation.core.util", "com/nexmo/sdk/conversation/core/util/package-summary.html", [ [ "Classes", null, [ [ "SIP_CODES", "com/nexmo/sdk/conversation/core/util/SIP_CODES.html", null, "" ] ]
+, "" ] ]
 , "" ], [ "com.nexmo.sdk.conversation.device", "com/nexmo/sdk/conversation/device/package-summary.html", [ [ "Classes", null, [ [ "DeviceProperties", "com/nexmo/sdk/conversation/device/DeviceProperties.html", null, "" ] ]
 , "" ] ]
 , "" ], [ "com.nexmo.sdk.conversation.push", "com/nexmo/sdk/conversation/push/package-summary.html", [ [ "Classes", null, [ [ "ConversationMessagingService", "com/nexmo/sdk/conversation/push/ConversationMessagingService.html", null, "" ], [ "ImageEvent", "com/nexmo/sdk/conversation/push/ImageEvent.html", null, "" ], [ "InviteEvent", "com/nexmo/sdk/conversation/push/InviteEvent.html", null, "" ], [ "PushNotification", "com/nexmo/sdk/conversation/push/PushNotification.html", null, "" ], [ "TextEvent", "com/nexmo/sdk/conversation/push/TextEvent.html", null, "" ] ]

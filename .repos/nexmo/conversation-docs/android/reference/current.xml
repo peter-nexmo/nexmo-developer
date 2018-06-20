@@ -16,6 +16,16 @@
  deprecated="not deprecated"
  visibility="protected"
 >
+<parameter name="placeholder" type="com.nexmo.sdk.conversation.client.ConversationPlaceholderOutgoingPhoneCall">
+</parameter>
+</constructor>
+<constructor name="Call"
+ type="com.nexmo.sdk.conversation.client.Call"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
 <parameter name="conversation" type="com.nexmo.sdk.conversation.client.Conversation">
 </parameter>
 </constructor>
@@ -1805,6 +1815,25 @@
 >
 </method>
 </class>
+<class name="ConversationPlaceholderOutgoingPhoneCall"
+ extends="com.nexmo.sdk.conversation.client.Conversation"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="ConversationPlaceholderOutgoingPhoneCall"
+ type="com.nexmo.sdk.conversation.client.ConversationPlaceholderOutgoingPhoneCall"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="protected"
+>
+<parameter name="knockerId" type="java.lang.String">
+</parameter>
+</constructor>
+</class>
 <class name="ConversationSignalingChannel"
  extends="java.lang.Object"
  abstract="false"
@@ -1813,6 +1842,21 @@
  deprecated="not deprecated"
  visibility="public"
 >
+<method name="callIpUsers"
+ return="void"
+ abstract="false"
+ native="false"
+ synchronized="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<parameter name="users" type="java.util.List&lt;java.lang.String&gt;">
+</parameter>
+<parameter name="listener" type="com.nexmo.sdk.conversation.client.event.RequestHandler&lt;com.nexmo.sdk.conversation.client.Call&gt;">
+</parameter>
+</method>
 <method name="callPhone"
  return="void"
  abstract="false"
@@ -1828,7 +1872,7 @@
 <parameter name="listener" type="com.nexmo.sdk.conversation.client.event.RequestHandler&lt;com.nexmo.sdk.conversation.client.Call&gt;">
 </parameter>
 </method>
-<method name="createCall"
+<method name="deleteKnocking"
  return="void"
  abstract="false"
  native="false"
@@ -1838,9 +1882,9 @@
  deprecated="not deprecated"
  visibility="public"
 >
-<parameter name="users" type="java.util.List&lt;java.lang.String&gt;">
+<parameter name="knockerId" type="java.lang.String">
 </parameter>
-<parameter name="listener" type="com.nexmo.sdk.conversation.client.event.RequestHandler&lt;com.nexmo.sdk.conversation.client.Call&gt;">
+<parameter name="listener" type="com.nexmo.sdk.conversation.client.event.RequestHandler">
 </parameter>
 </method>
 <method name="disableAudio"
@@ -8025,6 +8069,59 @@
 >
 </method>
 </interface>
+</package>
+<package name="com.nexmo.sdk.conversation.core.util"
+>
+<class name="SIP_CODES"
+ extends="java.lang.Object"
+ abstract="false"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+<constructor name="SIP_CODES"
+ type="com.nexmo.sdk.conversation.core.util.SIP_CODES"
+ static="false"
+ final="false"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</constructor>
+<field name="SIP_BUSY"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="486"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="SIP_FAILED"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="403"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+<field name="SIP_TIMEOUT"
+ type="int"
+ transient="false"
+ volatile="false"
+ value="487"
+ static="true"
+ final="true"
+ deprecated="not deprecated"
+ visibility="public"
+>
+</field>
+</class>
 </package>
 <package name="com.nexmo.sdk.conversation.device"
 >

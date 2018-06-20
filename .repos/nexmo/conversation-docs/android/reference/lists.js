@@ -79,13 +79,15 @@ var DATA = [
       { id:77, label:"com.nexmo.sdk.conversation.core.client.request.audio.RtcTerminateRequest", link:"com/nexmo/sdk/conversation/core/client/request/audio/RtcTerminateRequest.html", type:"class" },
       { id:78, label:"com.nexmo.sdk.conversation.core.networking", link:"com/nexmo/sdk/conversation/core/networking/package-summary.html", type:"package" },
       { id:79, label:"com.nexmo.sdk.conversation.core.networking.Constants", link:"com/nexmo/sdk/conversation/core/networking/Constants.html", type:"class" },
-      { id:80, label:"com.nexmo.sdk.conversation.device", link:"com/nexmo/sdk/conversation/device/package-summary.html", type:"package" },
-      { id:81, label:"com.nexmo.sdk.conversation.device.DeviceProperties", link:"com/nexmo/sdk/conversation/device/DeviceProperties.html", type:"class" },
-      { id:82, label:"com.nexmo.sdk.conversation.push", link:"com/nexmo/sdk/conversation/push/package-summary.html", type:"package" },
-      { id:83, label:"com.nexmo.sdk.conversation.push.ConversationMessagingService", link:"com/nexmo/sdk/conversation/push/ConversationMessagingService.html", type:"class" },
-      { id:84, label:"com.nexmo.sdk.conversation.push.ImageEvent", link:"com/nexmo/sdk/conversation/push/ImageEvent.html", type:"class" },
-      { id:85, label:"com.nexmo.sdk.conversation.push.InviteEvent", link:"com/nexmo/sdk/conversation/push/InviteEvent.html", type:"class" },
-      { id:86, label:"com.nexmo.sdk.conversation.push.PushNotification", link:"com/nexmo/sdk/conversation/push/PushNotification.html", type:"class" },
-      { id:87, label:"com.nexmo.sdk.conversation.push.TextEvent", link:"com/nexmo/sdk/conversation/push/TextEvent.html", type:"class" }
+      { id:80, label:"com.nexmo.sdk.conversation.core.util", link:"com/nexmo/sdk/conversation/core/util/package-summary.html", type:"package" },
+      { id:81, label:"com.nexmo.sdk.conversation.core.util.SIP_CODES", link:"com/nexmo/sdk/conversation/core/util/SIP_CODES.html", type:"class" },
+      { id:82, label:"com.nexmo.sdk.conversation.device", link:"com/nexmo/sdk/conversation/device/package-summary.html", type:"package" },
+      { id:83, label:"com.nexmo.sdk.conversation.device.DeviceProperties", link:"com/nexmo/sdk/conversation/device/DeviceProperties.html", type:"class" },
+      { id:84, label:"com.nexmo.sdk.conversation.push", link:"com/nexmo/sdk/conversation/push/package-summary.html", type:"package" },
+      { id:85, label:"com.nexmo.sdk.conversation.push.ConversationMessagingService", link:"com/nexmo/sdk/conversation/push/ConversationMessagingService.html", type:"class" },
+      { id:86, label:"com.nexmo.sdk.conversation.push.ImageEvent", link:"com/nexmo/sdk/conversation/push/ImageEvent.html", type:"class" },
+      { id:87, label:"com.nexmo.sdk.conversation.push.InviteEvent", link:"com/nexmo/sdk/conversation/push/InviteEvent.html", type:"class" },
+      { id:88, label:"com.nexmo.sdk.conversation.push.PushNotification", link:"com/nexmo/sdk/conversation/push/PushNotification.html", type:"class" },
+      { id:89, label:"com.nexmo.sdk.conversation.push.TextEvent", link:"com/nexmo/sdk/conversation/push/TextEvent.html", type:"class" }
 
     ];

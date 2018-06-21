@@ -13,3 +13,4 @@ There are a number of shared concepts between the various Nexmo APIs: the use of
 * [OAuth](/concepts/guides/oauth) – how to use OAuth 1.0a with Nexmo's API.
 * [Signing requests](/concepts/guides/signing-messages) – how to cryptographically sign requests.
 * [Webhooks](/concepts/guides/webhooks) – Nexmo's API can send data back to your web server via a webhook.
+* [Glossary](/concepts/guides/glossary) – A glossary of common terms used throughout the Nexmo platform.

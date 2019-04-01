@@ -1,6 +1,5 @@
 class ApplicationController < ActionController::Base
-  rescue_from Errno::ENOENT, with: :no_document
-  rescue_from Errno::ENOENT, with: :no_document
+  rescue_from Errno::ENOENT, with: :not_found
   rescue_from ActiveRecord::RecordNotFound, with: :not_found
   protect_from_forgery with: :exception
 
@@ -18,7 +17,7 @@ class ApplicationController < ActionController::Base
       redirect_to redirect
     else
       NotFoundNotifier.notify(request)
-      render 'static/404', status: :not_found, formats: [:html]
+      render_not_found
     end
   end
 
@@ -31,10 +30,6 @@ class ApplicationController < ActionController::Base
 
   def requires_authentication?
     ENV['USERNAME'] && ENV['PASSWORD']
-  end
-
-  def no_document
-    not_found
   end
 
   def set_show_feedback
@@ -54,11 +49,15 @@ class ApplicationController < ActionController::Base
   end
 
   def set_notices
-    @notices ||= YAML.load_file("#{Rails.root}/config/notices.yml")
+    @notices = YAML.load_file("#{Rails.root}/config/notices.yml")
   end
 
   def set_feedback_author
     return unless cookies[:feedback_author_id]
-    @feedback_author = Feedback::Author.select(:email).find_by_id(cookies[:feedback_author_id])
+    @feedback_author = Feedback::Author.select(:email).find_by(id: cookies[:feedback_author_id])
+  end
+
+  def render_not_found
+    render 'static/404', status: :not_found, formats: [:html]
   end
 end

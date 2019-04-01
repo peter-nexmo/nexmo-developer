@@ -1,6 +1,6 @@
 class CodeLanguage
   include ActiveModel::Model
-  attr_accessor :key, :label, :type
+  attr_accessor :key, :label, :type, :dependencies, :unindent, :icon, :run_command
   attr_writer :weight, :linkable, :languages, :lexer
 
   def weight
@@ -8,7 +8,8 @@ class CodeLanguage
   end
 
   def linkable?
-    @linkable || true
+    return true if @linkable.nil?
+    @linkable
   end
 
   def lexer
@@ -17,6 +18,7 @@ class CodeLanguage
   end
 
   def languages
+    @languages ||= []
     @languages.map do |language|
       CodeLanguageResolver.find(language)
     end

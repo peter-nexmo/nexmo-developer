@@ -6,7 +6,7 @@ api: Developer API
 
 # Developer - Numbers API Reference
 
-The Numbers API lets you manage your numbers and buy new virtual numbers for use with Nexmo's APIs.
+The Numbers API lets you manage your numbers and buy new virtual numbers for use with Nexmo's APIs. Read our [Authentication Guide](/concepts/guides/authentication) for information on how to pass your credentials by query string.
 
 ## Numbers
 
@@ -67,6 +67,7 @@ Parameter | Description | Required
 `country` | The two character country code in ISO 3166-1 alpha-2 format. | Yes
 `pattern` | A number pattern to search for. | No
 `search_pattern` | Strategy for matching pattern. Expected values: `0` (starts with, default), `1` (anywhere), `2` (ends with). | No
+`type` | The type of number to search for. Accepted values: `landline`, `landline-toll-free` and `mobile-lvn`. | No
 `features` | Available features are SMS and VOICE. For both features, use a comma-separated value SMS,VOICE. | No
 `size` | Page size [Max: 100] [Default: 10] | No
 `index` | Page index [Default: 1] | No
@@ -184,8 +185,10 @@ Parameter | Description | Required
 `voiceCallbackType` | The voice webhook type. Possible values are `sip`, `tel`, or `app` | No
 `voiceCallbackValue` | A SIP URI, telephone number or Application ID  | No
 `voiceStatusCallback` | A webhook URI for Nexmo to send a request to when a call ends. | No
+`messagesCallbackType` | The messages API webhook type. Must be `app`. | No
+`messagesCallbackValue` | Application ID referencing application with defined URLs. | No
 
-Please note, that `voiceCallbackValue` has to be used together with `voiceCallbackType` parameter.
+Please note that if you specify a `voiceCallbackValue` you must also provide the `voiceCallbackType` parameter. If you specify a `messagesCallbackValue` you must also provide `messagesCallbackType`.
 
 #### Response
 

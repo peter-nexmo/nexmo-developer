@@ -27,7 +27,7 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>/*
- * Nexmo Stitch SDK
+ * Nexmo Client SDK
  *  Main wrapper
  *
  * Copyright (c) Nexmo Inc. 2017
@@ -41,6 +41,7 @@ const prefix = require('loglevel-plugin-prefix');
 const Utils = require('./utils');
 const RTC_Cache = require('./modules/rtc_cache');
 const Application = require('./application');
+const ErrorsEmitter = require('./modules/errors_emitter');
 const User = require('./user')
 
 prefix.reg(logger);
@@ -72,14 +73,27 @@ const NexmoClientError = ConversationClientError.NexmoClientError;
  * @param {Boolean} params.debug=false set mode to debug
  * @param {string} params.url=nexmo_ws_url Nexmo Conversation Websocket url
  * @param {string} params.path=/rtc Nexmo Conversation Websocket url path suffix
- * @param {Boolean} params.reconnection=true socket.io reconnection attribute
- * @param {Boolean} params.forceNew=true socket.io forceNew attribute
- * @param {Boolean} params.autoConnect=true socket.io autoConnect attribute
+ * @param {object} params.rtcstats set reporting for stream statistics (Websocket or internal event emit)
+ * @param {string} params.rtcstats.ws_url='' endpoint (weboscket) to send rtc stats.
+ * @param {Boolean} params.rtcstats.emit_events=false receive rtcstats:report event
+
+ * @param {object} params.socket_io configure socket.io
+ * @param {Boolean} params.socket_io.forceNew=true configure socket.io forceNew attribute
+ * @param {Boolean} params.socket_io.autoConnect=true socket.io autoConnect attribute
+ * @param {Boolean} params.socket_io.reconnection=true socket.io reconnection attribute
+ * @param {number} params.socket_io.reconnectionAttempts=5 socket.io reconnectionAttempts attribute
+ * @param {string[]} params.socket_io.transports=['websocket] socket.io transports protocols
+
  * @param {string} params.ips_url=ips_url Nexmo IPS url for image upload
  * @param {string} params.environment='production' development / production environment
  * @param {object} params.iceServers=[{'stun:stun.l.google.com:19302'}] iceServers for RTCPeerConnection
+ * @param {object} param.callstats configure callstats.io integration
+ * @param {Boolean} param.callstats.enabled=false
+ * @param {string} param.callstats.AppID your callstats AppID
+ * @param {string} param.callstats.AppSecret your callstats AppSecret
  *
  * @emits ConversationClient#ready
+ * @emits ConversationClient#rtcstats:report
  */
 
 class ConversationClient {
@@ -87,30 +101,36 @@ class ConversationClient {
 		//save an array of instances
 		const options = params || {};
 		const config = this.config = {
-			autoConnect: true,
-			bugsnag_key: 'cd2dcd56892c3cd260b12caf6eecf022',
 			cache: true,
 			debug: false,
-			enable_log_reporter: true,
+			callstats: { enabled: false, AppID: '', AppSecret: '' },
 			environment: '@@environment',
-			forceNew: true,
 			ips_url: '@@ips_url',
 			path: '/rtc',
-			reconnection: true,
+			socket_io: {
+				reconnection: true,
+				reconnectionAttempts: 5,
+				forceNew: true,
+				autoConnect: true,
+				transports: ['websocket']
+			},
 			repository: '@@repository',
+			screenShareExtensionId: '',
 			SDK_version: '@@SDK_version',
 			url: '@@ws_url',
 			iceServers: [{
 				urls: 'stun:stun.l.google.com:19302'
 			}],
-			rtcstarts_enables: false,
-			rtcstarts_url: '@@rtcstarts_url'
+			rtcstats: {
+				ws_url: '',
+				emit_events: false
+			}
 		};
+
 		let connection;
 		this.sessionReady = false;
 		this.requests = {};
 		this.application = null;
-
 		// set our config from options
 		Object.assign(this.config, options);
 
@@ -121,8 +141,8 @@ class ConversationClient {
 		}
 		this.log = logger.noConflict();
 
-		//inject bug reporting tool
-		if (config.enable_log_reporter) {
+		// inject callstats library
+		if (this.config.callstats.enabled) {
 			function j(u, c) {
 				let h = document.getElementsByTagName('head')[0],
 					s = document.createElement('script');
@@ -142,27 +162,17 @@ class ConversationClient {
 
 
 			if (typeof document !== "undefined") {
-				j("//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js", () => {
-					if (typeof Bugsnag !== "undefined") {
-						if (!Bugsnag.apiKey) {
-							Bugsnag.apiKey = this.config.bugsnag_key;
-							Bugsnag.releaseStage = this.config.environment;
-							Bugsnag.appVersion = this.config.SDK_version;
-							Bugsnag.repository = this.config.repository;
-							Bugsnag.disableAutoBreadcrumbs();
-						}
+				j("//api.callstats.io/static/callstats.min.js", () => {
+					if (typeof callstats !== "undefined") {
+						this.callstats = new callstats();
 					}
 				});
 			}
 		}
 
 		// Create the socket.io connection and allow multiple instances
-		connection = socket_io.connect(config.url, {
-			path: config.path,
-			forceNew: config.forceNew,
-			reconnection: config.reconnection,
-			autoConnect: config.autoConnect
-		});
+		let socket_io_config = Object.assign({ path: config.path }, config.socket_io);
+		connection = socket_io.connect(config.url, socket_io_config);
 
 		this.connection = connection;
 
@@ -224,10 +234,18 @@ class ConversationClient {
 		 */
 		connection.on('reconnect', (retry_number) => {
 			this.emit('reconnect', retry_number);
-			if (this.cache &amp;&amp; this.cache.user_data) {
-				this.login(this.cache.user_data.token);
-				this.log.info('websocket reconnected');
-			}
+			Utils.getToken()
+				.then((token) => {
+					this.login(token)
+						.then(() => {
+							this.log.info('automatically logged in');
+						}).catch((error) => {
+							this.log.error(error);
+						});
+				}).catch((error) => {
+					this.log.error(error);
+				});
+			this.log.info('websocket reconnect');
 		});
 		/**
 		 * Reconnecting event.
@@ -242,7 +260,7 @@ class ConversationClient {
 			this.emit('reconnecting', retry_number);
 			this.log.info('websocket reconnecting');
 		});
-		/**x
+		/**
 		 * Error event.
 		 *
 		 * @event ConversationClient#error
@@ -267,6 +285,9 @@ class ConversationClient {
 				const callback = this.requests[response.rid].callback;
 				delete this.requests[response.rid];
 				delete response.delay;
+				if (this.errorsEmitter) {
+					this.errorsEmitter.emitResponseIfError(response);
+				}
 				callback(response);
 			} else {
 				// This is an unsolicited event
@@ -284,7 +305,7 @@ class ConversationClient {
 	 * @event Conversation#text
 	 *
 	 * @property {Member} sender - The sender of the text
-	 * @property {Text} text - The text message received
+	 * @property {TextEvent} text - The text message received
 	 * @example &lt;caption>listen for text events&lt;/caption>
 	 * conversation.on("text",(sender, message) => {
 	 *      console.log(sender,message);
@@ -395,7 +416,7 @@ class ConversationClient {
 	 * @event Conversation#text:seen
 	 *
 	 * @property {Member} member - the member that saw the text
-	 * @property {Text} text - the text that was seen
+	 * @property {TextEvent} text - the text that was seen
 	 * @example &lt;caption>listen for seen text events&lt;/caption>
 	 * conversation.on("text:seen", (data, text) => {
 	 *      console.log(text);
@@ -406,7 +427,7 @@ class ConversationClient {
 	 * // Get the list of members that have seen this event
 	 *      for (let member_id in text.state.seen_by) {
 	 *          if (conversation.me.id !== member_id) {
-	 *              console.log(conversation.members[member_id].name);
+	 *              console.log(conversation.members.get(member_id).name);
 	 *          }
 	 *       }
 	 * });
@@ -426,7 +447,7 @@ class ConversationClient {
 	 * // Get the list of members that have seen this event
 	 *      for (let member_id in image.state.seen_by) {
 	 *           if (conversation.me.id !== member_id) {
-	 *               console.log(conversation.members[member_id].name);
+	 *               console.log(conversation.members.get(member_id).name);
 	 *            }
 	 *       }
 	 * });
@@ -447,6 +468,24 @@ class ConversationClient {
 	 * 		console.log(event.body.media); //{"audio":true}
 	 * });
 	 */
+	/**
+	 * Conversation listening for mute on events
+	 * A member has muted their audio
+	 *
+	 * @event Conversation#audio:mute:on
+	 *
+	 * @property {Member} member - the member object linked to this event
+	 * @property {Event} event - information about the mute event
+	 */
+	/**
+	 * Conversation listening for mute off events
+	 * A member has unmuted their audio
+	 *
+	 * @event Conversation#audio:mute:off
+	 *
+	 * @property {Member} member - the member object linked to this event
+	 * @property {Event} event - information about the mute event
+	 */
 	sendRequest(request, callback) {
 		// Add a message ID to the request and set up a listener for the reply (or error)
 		request.tid = Utils.allocateUUID();
@@ -464,49 +503,74 @@ class ConversationClient {
 
 	/**
 	 * Login to the cloud.
-	 *x
 	 * @param {string} params.token - the login token
+	 * @returns  {Promise&lt;Application>} - the application we logged in
 	 */
 	login(token) {
-
 		// return a promise for the application
 		return new Promise((resolve, reject) => {
-			//make sure the token gets removed from localstorage
-			if (typeof (Storage) !== "undefined") {
-				localStorage.removeItem("NXMO_user_data");
-			}
+			this.log.info(`Client-SDK Version: ${this.config.SDK_version}`);
+			Utils.cleanupToken();
 			this.sendRequest({
 				type: 'session:login',
 				body: {
 					token: token,
 					SDK_version: this.config.SDK_version,
-					//device_id: //can use https://github.com/Valve/fingerprintjs2,
 					OS_family: 'js',
 					OS_revision: (typeof navigator !== "undefined") ? navigator.userAgent : (typeof window !== "undefined") ? window.navigator.userAgent : "Generic JS navigator"
 				}
 			}, (response) => {
 				if (response.type === "session:success") {
-					const application = new Application(this);
-					const me = new User(application, {
-						id: response.body.user_id,
-						name: response.body.name
-					});
-					this.application = application;
-					this.application.me = me;
-					if (this.cache) this.cache.updateToken({
-						token: token,
-						username: response.body.name
-					});
+					if (!this.application || (this.application.me &amp;&amp; this.application.me.id !== response.body.user_id)) {
+						this.application = new Application(this);
+					}
+					if (!this.application.me) {
+						this.application.me = new User(
+							this.application, {
+								id: response.body.user_id,
+								name: response.body.name
+							});
+					}
+					if (!this.errorsEmitter) {
+						this.errorsEmitter = new ErrorsEmitter(this.application);
+					}
+					this._updateTokenInStorage(token, response.body.name);
+					if (typeof (this.callstats) !== "undefined") {
+						const csStatsInit = (csError, csErrMsg) => {
+							this.log.info(`Status: errCode= ${csError} errMsg= ${csErrMsg}`);
+						}
+						const reportType = {
+							inbound: 'inbound',
+							outbound: 'outbound'
+						};
+
+						// callback function to receive the stats
+						const csStatsCallback = (stats) => {
+							var ssrc;
+							for (ssrc in stats.streams) {
+								this.log.info("SSRC is: ", ssrc);
+								var dataSsrc = stats.streams[ssrc];
+								this.log.info("SSRC Type ", dataSsrc.reportType);
+								if (dataSsrc.reportType === reportType.outbound) {
+									this.log.info("RTT is: ", dataSsrc.rtt);
+								} else if (dataSsrc.reportType === reportType.inbound) {
+									this.log.info("Inbound loss rate is: ", dataSsrc.fractionLoss);
+								}
+							}
+						}
+						const configParams = {
+							disableBeforeUnloadHandler: true, // disables callstats.js's window.onbeforeunload parameter.
+							applicationVersion: "app_version", // Application version specified by the developer.
+							disablePrecalltest: true // disables the pre-call test, it is enabled by default
+						};
+
+						this.callstats.initialize(this.config.callstats.AppID, this.config.callstats.AppSecret, this.application.me.id, csStatsInit, csStatsCallback, configParams);
+					}
 					// Retrieve the existing conversation data for this user
-					application.getConversations()
+					return this.application.getConversations()
 						.then(() => {
 							// Complete the login process
 							resolve(this.application);
-							if (typeof Bugsnag !== "undefined") {
-								Bugsnag.user = {
-									id: application.me.id
-								};
-							}
 						}, (reason) => {
 							reject(new NexmoApiError(reason));
 						});
@@ -517,14 +581,12 @@ class ConversationClient {
 						this.cache.worker.terminate();
 					}
 				}
-			}
-			);
+			});
 		});
 	}
 
 	/**
 	 * logout from the cloud.
-	 *
 	 */
 	logout() {
 		return new Promise((resolve, reject) => {
@@ -535,6 +597,7 @@ class ConversationClient {
 				}, (response) => {
 					if (response.type === "session:logged-out" || response.type === "session:terminated") {
 						this.disconnect();
+						delete this.errorsEmitter;
 						delete this.application;
 						delete this.cache;
 						this.callbacks = {};
@@ -542,8 +605,7 @@ class ConversationClient {
 						this.sessionReady = false;
 						resolve(response);
 					} else {
-						reject(new NexmoApiError(response));
-						if (typeof Bugsnag !== "undefined") Bugsnag.notifyException(Error(response.reason));
+						reject(response);
 					}
 				});
 			}
@@ -554,12 +616,12 @@ class ConversationClient {
 				for (let conversation_id in this.application.conversations) {
 					disablePromises.push(this.application.conversations[conversation_id].media.disable());
 				}
-				Promise.all(disablePromises)
-					.then(() => { }).catch((err) => { this.log.info(err); }).then(() => {
-						logoutRequest();
+				return Promise.all(disablePromises)
+					.catch((err) => { this.log.info(err); }).then(() => {
+						return logoutRequest();
 					});
 			} else {
-				logoutRequest();
+				return logoutRequest();
 
 			}
 		});
@@ -580,6 +642,19 @@ class ConversationClient {
 	connect() {
 		return this.connection.connect();
 	}
+
+	/**
+	 * Update or Set the stored token
+	 *
+	 * @param {string} token the token to set
+	 * @param {string} username the username to whom the token belongs to
+	 */
+	_updateTokenInStorage(token, username) {
+		return Utils.updateToken({
+			token: token,
+			username: username
+		});
+	}
 }
 module.exports = ConversationClient;
 </code></pre>
@@ -592,13 +667,13 @@ module.exports = ConversationClient;
 </div>
 
 <nav>
-    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="Call.html">Call</a></li><li><a href="Conversation.html">Conversation</a></li><li><a href="ConversationClient.html">ConversationClient</a></li><li><a href="Event.html">Event</a></li><li><a href="ImageEvent.html">ImageEvent</a></li><li><a href="Media.html">Media</a></li><li><a href="Member.html">Member</a></li><li><a href="Recording.html">Recording</a></li><li><a href="SipEventHandler.html">SipEventHandler</a></li><li><a href="TextEvent.html">TextEvent</a></li><li><a href="Utils.html">Utils</a></li></ul><h3>Events</h3><ul><li><a href="Application.html#event:member:call">member:call</a></li><li><a href="Application.html#event:member:invited">member:invited</a></li><li><a href="Application.html#event:member:joined">member:joined</a></li><li><a href="Application.html#event:sync:progress">sync:progress</a></li><li><a href="Call.html#event:call:state:changed">call:state:changed</a></li><li><a href="Call.html#event:member:call:state">member:call:state</a></li><li><a href="Conversation.html#event:event:delete">delete</a></li><li><a href="Conversation.html#event:image">image</a></li><li><a href="Conversation.html#event:text">text</a></li><li><a href="Conversation.html#event:image:seen">image:seen</a></li><li><a href="Conversation.html#event:member:invited">member:invited</a></li><li><a href="Conversation.html#event:member:joined">member:joined</a></li><li><a href="Conversation.html#event:member:left">member:left</a></li><li><a href="Conversation.html#event:member:media">member:media</a></li><li><a href="Conversation.html#event:text:seen">text:seen</a></li><li><a href="Conversation.html#event:text:typing:off">text:typing:off</a></li><li><a href="Conversation.html#event:text:typing:on">text:typing:on</a></li><li><a href="ConversationClient.html#event:connecting">connecting</a></li><li><a href="ConversationClient.html#event:disconnect">disconnect</a></li><li><a href="ConversationClient.html#event:error">error</a></li><li><a href="ConversationClient.html#event:ready">ready</a></li><li><a href="ConversationClient.html#event:reconnect">reconnect</a></li><li><a href="ConversationClient.html#event:reconnecting">reconnecting</a></li></ul><h3>Global</h3><ul><li><a href="global.html#NexmoApiError">NexmoApiError</a></li><li><a href="global.html#NexmoClientError">NexmoClientError</a></li></ul>
+    <h2><a href="index.html">Home</a></h2><h3>Classes</h3><ul><li><a href="Application.html">Application</a></li><li><a href="Call.html">Call</a></li><li><a href="Conversation.html">Conversation</a></li><li><a href="ConversationClient.html">ConversationClient</a></li><li><a href="Event.html">Event</a></li><li><a href="ImageEvent.html">ImageEvent</a></li><li><a href="Media.html">Media</a></li><li><a href="Member.html">Member</a></li><li><a href="Recording.html">Recording</a></li><li><a href="TextEvent.html">TextEvent</a></li></ul><h3>Events</h3><ul><li><a href="Application.html#event:call:status:changed">call:status:changed</a></li><li><a href="Application.html#event:NXM-errors">NXM-errors</a></li><li><a href="Application.html#event:member:call">member:call</a></li><li><a href="Application.html#event:member:invited">member:invited</a></li><li><a href="Application.html#event:member:joined">member:joined</a></li><li><a href="Application.html#event:rtcstats:report">rtcstats:report</a></li><li><a href="Application.html#event:sync:progress">sync:progress</a></li><li><a href="Call.html#event:member:call:state">member:call:state</a></li><li><a href="Conversation.html#event:audio:mute:off">audio:mute:off</a></li><li><a href="Conversation.html#event:audio:mute:on">audio:mute:on</a></li><li><a href="Conversation.html#event:event:delete">delete</a></li><li><a href="Conversation.html#event:image">image</a></li><li><a href="Conversation.html#event:text">text</a></li><li><a href="Conversation.html#event:image:seen">image:seen</a></li><li><a href="Conversation.html#event:member:invited">member:invited</a></li><li><a href="Conversation.html#event:member:joined">member:joined</a></li><li><a href="Conversation.html#event:member:left">member:left</a></li><li><a href="Conversation.html#event:member:media">member:media</a></li><li><a href="Conversation.html#event:text:seen">text:seen</a></li><li><a href="Conversation.html#event:text:typing:off">text:typing:off</a></li><li><a href="Conversation.html#event:text:typing:on">text:typing:on</a></li><li><a href="ConversationClient.html#event:connecting">connecting</a></li><li><a href="ConversationClient.html#event:disconnect">disconnect</a></li><li><a href="ConversationClient.html#event:error">error</a></li><li><a href="ConversationClient.html#event:ready">ready</a></li><li><a href="ConversationClient.html#event:reconnect">reconnect</a></li><li><a href="ConversationClient.html#event:reconnecting">reconnecting</a></li><li><a href="Member.html#event:media:stream:on">media:stream:on</a></li></ul><h3>Global</h3><ul><li><a href="global.html#NexmoApiError">NexmoApiError</a></li><li><a href="global.html#NexmoClientError">NexmoClientError</a></li></ul>
 </nav>
 
 <br class="clear">
 
 <footer>
-    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Tue Jun 26 2018 11:08:32 GMT-0400 (Eastern Daylight Time)
+    Documentation generated by <a href="https://github.com/jsdoc3/jsdoc">JSDoc 3.5.5</a> on Fri Feb 01 2019 11:02:45 GMT+0000 (UTC)
 </footer>
 
 <script> prettyPrint(); </script>

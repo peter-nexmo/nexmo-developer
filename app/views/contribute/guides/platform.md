@@ -31,7 +31,7 @@ We use a mixture of custom icons and ones made available by the packs, a backup 
 
 ## Navigation Text
 
-The navigation is generated from the file structure of the `/_documentation` folder. The documents get their titles from the front-matter within the Markdown files themselves for example the file at `/_documentation/messaging/sms/building-blocks/send-an-sms.md` has the following front-matter:
+The navigation is generated from the file structure of the `/_documentation` folder. The documents get their titles from the front-matter within the Markdown files themselves for example the file at `/_documentation/messaging/sms/code-snippets/send-an-sms.md` has the following front-matter:
 
 ```
 ---
@@ -55,11 +55,11 @@ Document | Description
 >
 > §
 >
-> The ordering is a flat lookup of the name. This can cause issues if two different orderings are required relating to two or more menu items with the same name. An example of this is that at the time of writing this Concepts sits as the very first and top-most element. If a product was to need a concepts section this would be forced to the the top the the product tree since they would both share a common name.
+> The ordering is a flat lookup of the name. This can cause issues if two different orderings are required relating to two or more menu items with the same name. An example of this is that at the time of writing this Concepts sits as the very first and top-most element. If a product was to need a concepts section this would be forced to the top the product tree since they would both share a common name.
 >
 > §
 >
-> Although this specific issue hasn't been addressed some work has been made towards having a tree based overides, this could allow an individual item to be overridden by specifying it's location within the the document hirearchy. You can see the start of this work under `navigation_overrides` within the `/config/navigation.yml` file.
+> Although this specific issue hasn't been addressed some work has been made towards having a tree based overrides, this could allow an individual item to be overridden by specifying it's location within the document hirearchy. You can see the start of this work under `navigation_overrides` within the `/config/navigation.yml` file.
 
 ## Pages and content
 
@@ -71,7 +71,7 @@ You can find this at `/app/constraints/documentation_constraint.rb`. The `produc
 
 API pages use a custom Open API parser and renderer. The parser belongs to a separate dependency you can find at [https://github.com/nexmo/oas_parser](https://github.com/nexmo/oas_parser). The rendering is provided by views that can be found at `/app/views/open_api/`.
 
-The Open API pages consume an Open API Specification 3 definition. This is usually supplied by the [Nexmo API Specification](https://github.com/nexmo/api-specification) dependency but can be supplied or overridden if the definition is placed in the `/_open_api/definitions/` directory.
+Each of the Open API pages consumes an Open API Specification 3 definition for that API. These are held in a separate repo <https://github.com/Nexmo/api-specification> and are brought into NDP as a git submodule.
 
 The parser has been built in such a way that it has tested against several OAS definitions however full compatibility with the specification shouldn't be assumed and development work may be required to support new features as they are authored within our definitions.
 
@@ -136,7 +136,7 @@ Here is a quick explanation of all of the filters:
 Filter | Current User Context | Type | Description
 --- | --- | --- | ---
 Frontmatter | No | [Implicit] | Strips frontmatter from documents
-PHPInliner | No | [Implicit] | Fixes a quirk with our code parser that requires PHP code to to have `<?php` at the start. This filter adds an option onto PHP code examples that makes this not required.
+PHPInliner | No | [Implicit] | Fixes a quirk with our code parser that requires PHP code to have `<?php` at the start. This filter adds an option onto PHP code examples that makes this not required.
 InlineEscape | No | [Extended] | Allows for escaping of inline code where normally the internals would be processes by the markdown. For example this isn't turned into a ``[label]`` when surrounded by two backticks.
 BlockEscape | No | [Extended] | Allows for escaping of code fences where normally the internals would be processes by the markdown.
 Screenshot | No | [Plugin] | Allows for screenshots be put into documentation that are captured by a headless browser so they can be easily refreshed.
@@ -166,7 +166,7 @@ ExternalLink | No | [Implicit] | Automatically adds an icon and `target="blank"`
 
 ## Webpack
 
-We use [Webpacker](https://github.com/rails/webpacker) to handle JavaScript in webpack with Ruby on Rails. We use the React intergration with this tool.
+We use [Webpacker](https://github.com/rails/webpacker) to handle JavaScript in webpack with Ruby on Rails. We use the React integration with this tool.
 
 The JavaScript file that is loaded can be found at `/app/javascript/packs/application.js`.
 
@@ -193,7 +193,7 @@ Notices can be added site-wide or on specific routes. Here are examples of imple
 ```yaml
 some-unique-id:
   content: |-
-    <h2>Welcome to Nexmo Developer</h2>
+    <h4>Welcome to Nexmo Developer</h4>
     <p>We are improving our Documentation, API references, learning resources & tooling to help you more effectively use our services. We want to help you find everything you need to integrate Nexmo APIs into your code.</p>
     <p>As we start this transition, we’d love to hear from you with thoughts & suggestions. If you’ve got something, positive or negative, to tell us, please tell us using the feedback tool at the bottom of each guide or <a href="https://github.com/Nexmo/nexmo-developer/issues/new">file an issue</a> on GitHub. - Nexmo</p>
 ```
@@ -205,10 +205,10 @@ another-inique-id:
   dismissible: false
   path: '^\/(api\/)?new-product'
   content: |-
-    <h2>Welcome to the Developer Preview for New Product</h2>
+    <h4>Welcome to the Developer Preview for New Product</h4>
     <p>If you are interested in participating, have any questions, or feedback you can email us at <a href="mailto:new-product-support@nexmo.com">ea-support@nexmo.com</a>.</p>
 ```
 
 ## Code Examples
 
-Code examples are often pulled in from quickstart repos, you can find out more about this process in the [Readme - Pulling in code from other repos](https://github.com/nexmo/nexmo-developer#pulling-in-code-from-other-repos).
+Code examples are often pulled in from other repositories using submodules - refer to the project `README` for more information.

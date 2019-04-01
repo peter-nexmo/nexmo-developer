@@ -1,5 +1,6 @@
 ---
 title: DTMF
+description: Capture user input by detecting DTMF tones (button presses) during a call.
 navigation_weight: 6
 ---
 
@@ -13,7 +14,7 @@ DTMF is used both for dialing a destination on a landline telephone and also for
 
 ## Collecting Input
 
-You can collect input from your caller by using the `input` action within your NCCO. You can collect a specific number of digits, set a timeout value or wait until the user has pressed the `#` key before continuing (see the [input action](/voice/voice-api/ncco-reference#input)). Once the action is complete, Nexmo will send a webhook to your `event_url` containing the keys that were pressed.If you return a new NCCO in response to this event Nexmo will replace the existing NCCO, ignoring any actions defined after the `input`.
+You can collect input from your caller by using the `input` action within your NCCO. You can collect a specific number of digits, set a timeout value or wait until the user has pressed the `#` key before continuing (see the [input action](/voice/voice-api/ncco-reference#input)). Once the action is complete, Nexmo will send a webhook to your `event_url` containing the keys that were pressed. If you return a new NCCO in response to this event Nexmo will replace the existing NCCO, ignoring any actions defined after the `input`.
 
 ## Sending DTMF 
 
@@ -27,6 +28,6 @@ You can use digits `0-9`, `*`, and `#`. A `p` indicates a pause of 500ms if you 
 
 ## Troubleshooting
 
-DTMF can be sent across digtal phone networks in several ways, known as In-Band and Out-of-Band, with In-Band the tones are played in the audio channel of the call and will be heard by the parties on the call. With Out-of-Band signalling the tones are sent in a separate signalling channel and may not be heard by a caller listening on the other end. This means that if you are testing sending DTMF by calling your own phone, you may not hear the tones in your earpiece.
+DTMF can be sent across digital phone networks in several ways, known as In-Band and Out-of-Band, with In-Band the tones are played in the audio channel of the call and will be heard by the parties on the call. With Out-of-Band signalling the tones are sent in a separate signalling channel and may not be heard by a caller listening on the other end. This means that if you are testing sending DTMF by calling your own phone, you may not hear the tones in your earpiece.
 
 DTMF can also have specific local carrier problems. If you experience difficulties in using DTMF please contact support@nexmo.com with details of your problem.

@@ -23,15 +23,15 @@ https://api.nexmo.com/conversions/voice?api_key=xxxxxx&api_secret=xxxxxxx&messag
 
 This request contains:
 
-* A [Base URL](#base)
+* A [Base URL](#base-url)
 * [Parameters](#parameters )
-* [Authentication information](#authentic )
+* [Authentication information](#authentication-information )
 * [Security](#security )
-* [Encoding](#encode)
+* [Encoding](#encoding)
 
 ## Base URL
 
-Conversion API only accepts POST requests. The reply is not in JSON or XML format.
+The Conversion API only accepts POST requests. The reply is not in JSON or XML format.
 Your base URL becomes either:
 
 **SMS API**

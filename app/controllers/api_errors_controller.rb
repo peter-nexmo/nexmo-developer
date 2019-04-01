@@ -1,5 +1,6 @@
 class ApiErrorsController < ApplicationController
-  before_action :set_error_config
+  before_action :error_config
+  before_action :validate_subapi
 
   def index
     @errors_title = 'Generic Errors'
@@ -8,13 +9,14 @@ class ApiErrorsController < ApplicationController
       {
         key: key,
         config: config,
-        errors: scoped_errors(key)
+        errors: scoped_errors(key),
       }
     end
   end
 
   def index_scoped
     @errors_title = @error_config['products'][params[:definition]]['title']
+    @hide_rfc7807_header = @error_config['products'][params[:definition]]['hide_rfc7807_header']
     @errors = scoped_errors(params[:definition])
     render 'index'
   end
@@ -46,7 +48,21 @@ class ApiErrorsController < ApplicationController
     ApiError.new(error)
   end
 
-  def set_error_config
+  def error_config
     @error_config ||= YAML.load_file("#{Rails.root}/config/api-errors.yml")
+  end
+
+  def validate_subapi
+    # If there is no subapi specified, everything is fine
+    return unless params[:subapi]
+
+    # We used to have some OAS documents that have since been merged in to the top
+    # level OAS documents, but we still need to support the old URLs
+    # e.g. account/secret-management
+    allowed_subapis = {
+      'account' => ['secret-management'],
+    }
+
+    render_not_found unless allowed_subapis[params[:definition]]&.include? params[:subapi]
   end
 end

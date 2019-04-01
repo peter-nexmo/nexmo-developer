@@ -1,7 +1,7 @@
 ---
 title: Amazon Lex Connector
+description: You can use the Lex Connector to connect a Nexmo voice call to an [AWS Lex](https://aws.amazon.com/lex/) bot and then have an audio conversation with the bot.
 navigation_weight: 8
-
 ---
 
 # Connecting voice calls to Amazon Lex bots
@@ -13,7 +13,7 @@ Lex](https://aws.amazon.com/lex/) bot and then have an audio
 conversation with the bot.
 
 Lex Connector makes use of the [WebSockets
-feature](/concepts/guides/websockets) of Nexmo's Voice API. When a
+feature](/voice/voice-api/guides/websockets) of Nexmo's Voice API. When a
 call is established, the API makes a websocket connection to Lex
 Connector and streams the audio to and from the call in real-time.
 
@@ -54,7 +54,7 @@ Here is an example of the NCCO you should return to handle incoming calls with L
         "action": "connect",
         "endpoint": [
             {
-                "content-type": "audio/l16;rate=8000",
+                "content-type": "audio/l16;rate=16000",
                 "headers": {
                     "aws_key": "AAAAAAAAAAAAAAAAAAAAAAAAAAA",
                     "aws_secret": "eescOz9xisx+gx-PFU3G4AJg4NE4UExnHYaijI+o6xgNT0"
@@ -72,7 +72,7 @@ Here is an example of the NCCO you should return to handle incoming calls with L
 
 The first `talk` action is a simple way to start the call. Lex expects the user to speak first, so you need to start the conversation as you would in a phone call, by greeting the caller. You can customise this text to fit your use case.
 
-By comparing the [range of voices available on Nexmo](/voice/voice-api/ncco-reference#voice-names) with those available on Lex, you can select a combination of voices that feels natural for the caller. There is some overlap in the choice of voices available from both Nexmo and Lex.
+By comparing the [range of voices available on Nexmo](/voice/voice-api/guides/text-to-speech#voice-names) with those available on Lex, you can select a combination of voices that feels natural for the caller. There is some overlap in the choice of voices available from both Nexmo and Lex.
 
 The next action is `connect`: this makes call connect to the WebSocket endpoint, specifically the Lex Connector WebSocket.
 

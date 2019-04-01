@@ -1,0 +1,39 @@
+[submodule "_open_api/api_specs"]
+	path = _open_api/api_specs
+	url = https://github.com/Nexmo/api-specification.git
+[submodule ".repos/nexmo/client-sdk-javascript-code-snippets"]
+	path = .repos/nexmo/client-sdk-javascript-code-snippets
+	url = https://github.com/Nexmo/client-sdk-javascript-code-snippets.git
+[submodule ".repos/nexmo/client-sdk-android-kotlin-code-snippets"]
+	path = .repos/nexmo/client-sdk-android-kotlin-code-snippets
+	url = https://github.com/Nexmo/client-sdk-android-kotlin-code-snippets.git
+[submodule ".repos/nexmo/client-sdk-android-java-code-snippets"]
+	path = .repos/nexmo/client-sdk-android-java-code-snippets
+	url = https://github.com/Nexmo/client-sdk-android-java-code-snippets.git
+[submodule ".repos/nexmo/client-sdk-objective-c-code-snippets"]
+	path = .repos/nexmo/client-sdk-objective-c-code-snippets
+	url = https://github.com/Nexmo/client-sdk-objective-c-code-snippets.git
+[submodule ".repos/nexmo/client-sdk-swift-code-snippets"]
+	path = .repos/nexmo/client-sdk-swift-code-snippets
+	url = https://github.com/Nexmo/client-sdk-swift-code-snippets.git
+[submodule ".repos/nexmo/nexmo-ruby-code-snippets"]
+	path = .repos/nexmo/nexmo-ruby-code-snippets
+	url = https://github.com/Nexmo/nexmo-ruby-code-snippets.git
+[submodule ".repos/nexmo/nexmo-php-code-snippets"]
+	path = .repos/nexmo/nexmo-php-code-snippets
+	url = https://github.com/Nexmo/nexmo-php-code-snippets.git
+[submodule ".repos/nexmo/nexmo-python-code-snippets"]
+	path = .repos/nexmo/nexmo-python-code-snippets
+	url = https://github.com/Nexmo/nexmo-python-code-snippets.git
+[submodule ".repos/nexmo/nexmo-node-code-snippets"]
+	path = .repos/nexmo/nexmo-node-code-snippets
+	url = https://github.com/Nexmo/nexmo-node-code-snippets.git
+[submodule ".repos/nexmo/nexmo-dotnet-code-snippets"]
+	path = .repos/nexmo/nexmo-dotnet-code-snippets
+	url = https://github.com/Nexmo/nexmo-dotnet-code-snippets.git
+[submodule ".repos/nexmo/nexmo-java-code-snippets"]
+	path = .repos/nexmo/nexmo-java-code-snippets
+	url = https://github.com/Nexmo/nexmo-java-code-snippets.git
+[submodule ".repos/nexmo/nexmo-curl-code-snippets"]
+	path = .repos/nexmo/nexmo-curl-code-snippets
+	url = https://github.com/Nexmo/nexmo-curl-code-snippets.git

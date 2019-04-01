@@ -1,6 +1,6 @@
 class CodeFilter < Banzai::Filter
   def call(input)
-    input.gsub(/```code(.+?)```/m) do |_s|
+    input.gsub(/(?!.*snippet)```code(.+?)```/m) do |_s|
       config = YAML.safe_load($1)
 
       if config['config']
@@ -22,12 +22,6 @@ class CodeFilter < Banzai::Filter
       code.unindent! if config['unindent']
 
       highlighted_source = highlight(code, lexer)
-
-      line_numbers = (1..total_lines).map do |line_number|
-        <<~HEREDOC
-          <span class="focus__lines__line">#{line_number}</span>
-        HEREDOC
-      end
 
       <<~HEREDOC
         <pre class="highlight #{lexer.tag}"><code>#{highlighted_source}</code></pre>

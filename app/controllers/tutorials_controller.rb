@@ -4,31 +4,43 @@ class TutorialsController < ApplicationController
 
   def index
     @product = params['product']
+    @language = params['code_language']
 
-    if @product
-      @tutorials = Tutorial.by_product(params['product'])
-    else
-      @tutorials = Tutorial.all
-    end
+    @tutorials = Tutorial.all
+
+    @tutorials = Tutorial.by_product(@product, @tutorials) if @product
+    @tutorials = Tutorial.by_language(@language, @tutorials) if @language
 
     @document_title = 'Tutorials'
+
+    @base_path = request.original_fullpath.chomp('/')
+
+    # We have to strip the last section off if it matches any code languages. Hacky, but it works
+    DocumentationConstraint.code_language_list.map(&:downcase).each do |lang|
+      @base_path.gsub!(%r{/#{lang}$}, '')
+    end
 
     render layout: 'page'
   end
 
   def show
-    @document_path = "_tutorials/#{@document}.md"
-
     # Read document
+    @document_path = "_tutorials/#{@document}.md"
     document = File.read("#{Rails.root}/#{@document_path}")
 
     # Parse frontmatter
     @frontmatter = YAML.safe_load(document)
+
     @document_title = @frontmatter['title']
+    @product = @frontmatter['products']
 
-    @content = MarkdownPipeline.new({ code_language: @code_language }).call(document)
+    @content = MarkdownPipeline.new({ code_language: @code_language, disable_label_filter: true }).call(document)
 
-    render layout: 'static'
+    @namespace_path = "_documentation/#{@product}"
+    @namespace_root = '_documentation'
+    @sidenav_root = "#{Rails.root}/_documentation"
+
+    render layout: 'documentation'
   end
 
   private
@@ -39,8 +51,5 @@ class TutorialsController < ApplicationController
 
   def set_navigation
     @navigation = :tutorials
-    @side_navigation_extra_links = {
-      'Tutorials' => '/tutorials',
-    }
   end
 end

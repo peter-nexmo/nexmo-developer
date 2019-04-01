@@ -3,10 +3,8 @@ terminal_programs:
     weight: 1
     label: cURL
     lexer: sh
-  httpie:
-    weight: 1
-    label: HTTPie
-    lexer: sh
+    icon: curl
+    run_command: 'sh {filename}'
   cli:
     label: CLI
     lexer: sh
@@ -17,42 +15,99 @@ languages:
     weight: 2
     label: JavaScript
     lexer: javascript
+    icon: javascript
+    dependencies:
+      - 'nexmo'
+
   node:
     weight: 2
     label: Node.js
     lexer: javascript
+    icon: node
+    dependencies:
+      - 'nexmo'
+    run_command: 'node {filename}'
+
   java:
     weight: 3
     label: Java
     lexer: java
+    unindent: true
+    icon: java
+    dependencies:
+      - 'com.nexmo:client:@latest'
+
   dotnet:
     weight: 4
     label: .NET
     lexer: c#
+    unindent: true
+    icon: dotnet
+    dependencies:
+      - 'Nexmo.Csharp.Client'
   csharp:
     weight: 4
-    label: C#
+    label: .NET
     lexer: c#
+    unindent: true
+    icon: dotnet
+    dependencies:
+      - 'Nexmo.Csharp.Client'
+
   php:
     weight: 5
     label: PHP
     lexer: php
+    icon: php
+    dependencies:
+      - 'nexmo/client'
+    run_command: 'php {filename}'
+
   python:
     weight: 6
     label: Python
     lexer: python
+    icon: python
+    dependencies:
+      - 'nexmo'
+    run_command: 'python {filename}'
+
   ruby:
     weight: 7
     label: Ruby
     lexer: ruby
-  swift:
+    icon: ruby
+    dependencies:
+      - 'nexmo'
+    run_command: 'ruby {filename}'
+
+  kotlin:
     weight: 8
+    label: Kotlin
+    lexer: java
+    icon: android
+    dependencies: []
+
+  android:
+    weight: 9
+    label: Java
+    lexer: java
+    icon: android
+    dependencies: []
+
+  swift:
+    weight: 10
     label: Swift
     lexer: swift
+    icon: ios
+    dependencies: []
+
   objective_c:
-    weight: 8
+    weight: 11
     label: Objective-C
     lexer: objective_c
+    icon: ios
+    dependencies: []
 
 platforms:
   ios:

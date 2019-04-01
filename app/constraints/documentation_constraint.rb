@@ -3,50 +3,63 @@ class DocumentationConstraint
     code_language.merge(product)
   end
 
-  def self.code_language
-    linkable_languages = CodeLanguageResolver.linkable.map(&:key)
-    { code_language: Regexp.new(linkable_languages.compact.join('|')) }
+  def self.code_language_list
+    CodeLanguageResolver.linkable.map(&:key)
   end
 
-  def self.product
-    products = [
+  def self.code_language
+    { code_language: Regexp.new(code_language_list.compact.join('|')) }
+  end
+
+  def self.product_list
+    [
+      'audit',
       'voice',
       'messaging',
       'verify',
       'number-insight',
       'account',
       'concepts',
+      'client-sdk',
       'stitch',
-      'messages-and-workflows-apis',
+      'conversation',
+      'messages',
+      'dispatch',
+      'vonage-business-cloud',
     ]
+  end
 
-    { product: Regexp.new(products.compact.join('|')) }
+  def self.product
+    { product: Regexp.new(product_list.compact.join('|')) }
   end
 
   def self.product_with_parent_list
     [
+      'audit',
       'voice/sip',
       'voice/voice-api',
       'messaging/sms',
       'messaging/conversion-api',
-      'messaging/sns',
       'messaging/us-short-codes',
       'verify',
       'number-insight',
       'account',
       'concepts',
-      'stitch/in-app-voice',
-      'stitch/in-app-messaging',
-      'messages-and-workflows-apis/messages',
-      'messages-and-workflows-apis/workflows',
+      'client-sdk',
+      'client-sdk/in-app-voice',
+      'client-sdk/in-app-video',
+      'client-sdk/in-app-messaging',
+      'conversation',
+      'messages',
+      'dispatch',
+      'vonage-business-cloud/number-programmability',
+      'vonage-business-cloud/vbc-apis/account-api',
+      'vonage-business-cloud/vbc-apis/extension-api',
+      'vonage-business-cloud/vbc-apis/user-api',
     ]
   end
 
   def self.product_with_parent
     { product: Regexp.new(product_with_parent_list.compact.join('|')) }
-  end
-
-  def self.language_configuration
-    @language_configuration ||= YAML.load_file("#{Rails.root}/config/code_languages.yml")
   end
 end

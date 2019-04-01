@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180404124814) do
+ActiveRecord::Schema.define(version: 20181006144242) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -110,6 +110,11 @@ ActiveRecord::Schema.define(version: 20180404124814) do
     t.index ["sluggable_type"], name: "index_friendly_id_slugs_on_sluggable_type"
   end
 
+  create_table "redirects", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "url"
+    t.integer "uses"
+  end
+
   create_table "sessions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
     t.string "title"
     t.text "description"
@@ -120,6 +125,20 @@ ActiveRecord::Schema.define(version: 20180404124814) do
     t.datetime "updated_at", null: false
     t.boolean "published"
     t.index ["published"], name: "index_sessions_on_published"
+  end
+
+  create_table "usage_building_block_events", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.string "language", null: false
+    t.string "block", null: false
+    t.string "section", null: false
+    t.string "action", null: false
+    t.string "ip", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["action"], name: "index_usage_building_block_events_on_action"
+    t.index ["block"], name: "index_usage_building_block_events_on_block"
+    t.index ["ip"], name: "index_usage_building_block_events_on_ip"
+    t.index ["language"], name: "index_usage_building_block_events_on_language"
   end
 
   create_table "users", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|

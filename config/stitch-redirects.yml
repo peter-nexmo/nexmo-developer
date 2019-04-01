@@ -1,0 +1,80 @@
+---
+# Rename
+
+# Existing
+"/stitch": "/stitch/overview"
+"/stitch/sdk-documentation/android": "/sdk/stitch/android/"
+"/stitch/sdk-documentation/ios": "/sdk/stitch/ios/"
+"/stitch/sdk-documentation/javascript": "/sdk/stitch/javascript/"
+"/stitch/api-reference": "/api/stitch"
+"/stitch/in-app-messaging/guides/1-simple-conversation/javascript": "/stitch/in-app-messaging/guides/simple-conversation/javascript"
+"/stitch/in-app-messaging/guides/1-simple-conversation/android": "/stitch/in-app-messaging/guides/simple-conversation/android"
+"/stitch/in-app-messaging/guides/1-simple-conversation/ios": "/stitch/in-app-messaging/guides/simple-conversation/ios"
+"/stitch/in-app-messaging/guides/1-simple-conversation": "/stitch/in-app-messaging/guides/simple-conversation"
+"/stitch/in-app-messaging/guides/2-inviting-members/javascript": "/stitch/in-app-messaging/guides/inviting-members/javascript"
+"/stitch/in-app-messaging/guides/2-inviting-members/android": "/stitch/in-app-messaging/guides/inviting-members/android"
+"/stitch/in-app-messaging/guides/2-inviting-members/ios": "/stitch/in-app-messaging/guides/inviting-members/ios"
+"/stitch/in-app-messaging/guides/2-inviting-members": "/stitch/in-app-messaging/guides/inviting-members"
+"/stitch/in-app-messaging/guides/3-utilizing-events/javascript": "/stitch/in-app-messaging/guides/utilizing-events/javascript"
+"/stitch/in-app-messaging/guides/3-utilizing-events/android": "/stitch/in-app-messaging/guides/utilizing-events/android"
+"/stitch/in-app-messaging/guides/3-utilizing-events/ios": "/stitch/in-app-messaging/guides/utilizing-events/ios"
+"/stitch/in-app-messaging/guides/3-utilizing-events": "/stitch/in-app-messaging/guides/utilizing-events"
+"/stitch/in-app-voice/guides/1-enable-audio/javascript": "/stitch/in-app-voice/guides/enable-audio/javascript"
+"/stitch/in-app-voice/guides/1-enable-audio/android": "/stitch/in-app-voice/guides/enable-audio/android"
+"/stitch/in-app-voice/guides/1-enable-audio/ios": "/stitch/in-app-voice/guides/enable-audio/ios"
+"/stitch/in-app-voice/guides/1-enable-audio": "/stitch/in-app-voice/guides/enable-audio"
+"/stitch/in-app-voice/guides/2-calling-users/javascript": "/stitch/in-app-voice/guides/calling-users/javascript"
+"/stitch/in-app-voice/guides/2-calling-users/android": "/stitch/in-app-voice/guides/calling-users/android"
+"/stitch/in-app-voice/guides/2-calling-users/ios": "/stitch/in-app-voice/guides/calling-users/ios"
+"/stitch/in-app-voice/guides/2-calling-users": "/stitch/in-app-voice/guides/calling-users"
+"/stitch/in-app-voice/guides/3-outbound-pstn/javascript": "/stitch/in-app-voice/guides/outbound-pstn/javascript"
+"/stitch/in-app-voice/guides/3-outbound-pstn/android": "/stitch/in-app-voice/guides/outbound-pstn/android"
+"/stitch/in-app-voice/guides/3-outbound-pstn/ios": "/stitch/in-app-voice/guides/outbound-pstn/ios"
+"/stitch/in-app-voice/guides/3-outbound-pstn": "/stitch/in-app-voice/guides/outbound-pstn"
+"/stitch/in-app-video/guides/1-enable-video/javascript": "/stitch/in-app-video/guides/enable-video/javascript"
+"/stitch/in-app-video/guides/1-enable-video": "/stitch/in-app-video/guides/enable-video"
+"/stitch/in-app-video/guides/2-enable-screenshare/javascript": "/stitch/in-app-video/guides/enable-screenshare/javascript"
+"/stitch/in-app-video/guides/2-enable-screenshare": "/stitch/in-app-video/guides/enable-screenshare"
+"/sdk/stitch/ios": "/sdk/stitch/ios/"
+"/stitch/in-app-voice/ncco-guide": "/stitch/in-app-voice/guides/ncco-guide"
+"/stitch/in-app-voice/inbound-pstn": "/stitch/in-app-voice/guides/inbound-pstn"
+
+# Client SDK 
+
+"/client-sdk/in-app-messaging/concepts": "/conversation/concepts"
+"/client-sdk/in-app-messaging/code-snippets": "/client-sdk/in-app-messaging/overview"
+"/client-sdk/in-app-messaging/tutorials": "/client-sdk/tutorials"
+
+"/client-sdk/in-app-voice/concepts": "/conversation/concepts"
+"/client-sdk/in-app-voice/code-snippets": "/client-sdk/in-app-voice/code-snippets/answer-call"
+"/client-sdk/in-app-voice/tutorials": "/client-sdk/tutorials"
+
+"/client-sdk/in-app-video/concepts": "/conversation/concepts"
+"/client-sdk/in-app-video/code-snippets": "/client-sdk/in-app-video/overview"
+"/client-sdk/in-app-video/tutorials": "/client-sdk/tutorials"
+
+"/stitch/overview": "/client-sdk/overview"
+
+# Redirect to SDK docs for now
+
+"/client-sdk/sdk-documentation/android": "/sdk/stitch/android/"
+"/client-sdk/sdk-documentation/ios": "/sdk/stitch/ios/"
+"/client-sdk/sdk-documentation/javascript": "/sdk/stitch/javascript/"
+
+"/sdk/client-sdk/android": "/sdk/stitch/android/"
+"/sdk/client-sdk/ios": "/sdk/stitch/ios/"
+"/sdk/client-sdk/javascript": "/sdk/stitch/javascript/"
+
+
+# Conversation API
+
+"/conversation": "/conversation/overview"
+"/conversation/concepts": "/conversation/concepts/conversation"
+"/conversation/code-snippets": "/conversation/code-snippets/conversation/create-conversation"
+"/conversation/api-reference": "/api/conversation"
+
+"/api/stitch": "/api/conversation"
+
+# Temporary landing page for onboarding
+"/client-sdk/in-app-voice/onboarding": "/in-app-voice"
+"/voice-onboarding": "/in-app-voice"

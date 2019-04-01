@@ -13,7 +13,7 @@
 <br>
 
 <h2>Description</h2>
-<p><%= @error.description %></p>
+<p><%= @error.description.render_markdown %></p>
 
 <br>
 
@@ -23,5 +23,5 @@
 <br>
 
 <% if @error.link %>
-    <%= link_to @error.link.text, @error.link.url, class: 'button' %>
+    <%= link_to @error.link.text, @error.link.url, class: 'Vlt-btn Vlt-btn--secondary Vlt-btn--app' %>
 <% end %>

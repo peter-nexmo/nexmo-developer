@@ -10,22 +10,6 @@ Below we provide example configurations for using Nexmo's SIP service with [Free
 ## Inbound configuration
 
 ````
-host=173.193.199.24
-type=friend
-insecure=port,invite
-;Add your codec list here.
-; Note: Use "ulaw" for US only, "alaw" for the rest of the world.
-allow=ulaw,alaw,g729
-dtmfmode=rfc2833
-
-host=174.37.245.34
-type=friend
-insecure=port,invite
-;Add your codec list here.
-; Note: Use "ulaw" for US only, "alaw" for the rest of the world.
-allow=ulaw,alaw,g729
-dtmfmode=rfc2833
-
 host=5.10.112.121
 type=friend
 insecure=port,invite
@@ -57,6 +41,22 @@ insecure=port,invite
 ; Note: Use "ulaw" for US only, "alaw" for the rest of the world.
 allow=ulaw,alaw,g729
 dtmfmode=rfc2833
+
+host=169.60.141.29
+type=friend
+insecure=port,invite
+;Add your codec list here.
+; Note: Use "ulaw" for US only, "alaw" for the rest of the world.
+allow=ulaw,alaw,g729
+dtmfmode=rfc2833
+
+host=169.60.141.30
+type=friend
+insecure=port,invite
+;Add your codec list here.
+; Note: Use "ulaw" for US only, "alaw" for the rest of the world.
+allow=ulaw,alaw,g729
+dtmfmode=rfc2833
 ````
 
 ## Outbound configuration
@@ -78,3 +78,18 @@ host=sip.nexmo.com
   Register String
   <key>:<secret>@sip.nexmo.com
 ````
+
+## PJSIP configuration
+
+For PJSIP configuration use the following information:
+
+| Config item | Value |
+|----|----|
+| Authentication | Outbound |
+| Registration | None |
+| SIP Server | sip.nexmo.com |
+| Username | API Key |
+| Secret | API Secret |
+| From Domain | sip.nexmo.com |
+| DTMF Mode | RFC4733 |
+| Codecs | ulaw, alaw, g729 |

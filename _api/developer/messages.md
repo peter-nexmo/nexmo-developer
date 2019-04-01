@@ -6,9 +6,14 @@ api: Developer API
 
 # Developer - Messages API Reference
 
+> <strong>Please note that the Messages API is rate limited to one request per second.</strong>
+
+> This API is intended for use during development and is not intended as a replacement for handling callbacks using a webhook
+
 ## Messages
 
 The Messages API lets you retrieve messages you have sent via the SMS API by ID, as well as retrieve details of messages that were rejected.
+
 
 ### Search
 
@@ -32,7 +37,7 @@ Parameter | Description | Required
 
 The following shows example Responses in JSON or XML:
 
-**Outbound Message**
+**Outbound Message (MT)**
 
 ```tabbed_examples
 source: /_examples/api/developer/message/search/outbound

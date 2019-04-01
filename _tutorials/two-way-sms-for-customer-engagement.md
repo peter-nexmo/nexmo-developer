@@ -67,7 +67,7 @@ Number updated
 
 > **Note**: ensure your server is running and publicly available before associating the webhook endpoint with your virtual number. Nexmo must receive a 200 OK response from your webhook endpoint for successful configuration. If you're developing locally use a tool such as [ngrok](https://ngrok.com/) to expose your local web server to the Internet.
 
-Now you have configured your virtual number, you can send SMS delivery notifications.
+Now that you have configured your virtual number, you can send SMS delivery notifications.
 
 ## Create a basic Web app
 
@@ -149,7 +149,7 @@ nexmo = Nexmo::Client.new(
 )
 ```
 
-> **Note**: do not store your API credentials in your code, use [environment variables](#env).
+> **Note**: do not store your API credentials in your code, use environment variables.
 
 To receive replies to your notification SMS, you set your virtual number as the senderID for outbound messages when you make a request to [SMS API](/api/sms):
 
@@ -182,7 +182,7 @@ To verify that this SMS was received by the customer, check the [delivery receip
 
 ## Process the reply SMS
 
-When your customer replies to your notification SMS, Nexmo forwards the [inbound message](/api/sms#inbound) to the webhook endpoint associated with the virtual number.
+When your customer replies to your notification SMS, Nexmo forwards the [inbound message](/api/sms#inbound-sms) to the webhook endpoint associated with the virtual number.
 
 In this tutorial app you process the incoming webhook, extract the text and number, and send a confirmation message back to the customer.
 

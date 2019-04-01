@@ -2,11 +2,11 @@
 title: Java
 language: java
 dependencies:
-    - 'com.nexmo:client:latest.release'
+    - 'com.nexmo:client:4.1.0'
     - 'com.sparkjava:spark-core:2.7.2'
 code:
-    source: .repos/nexmo-community/nexmo-java-quickstart/src/main/java/com/nexmo/quickstart/voice/RecordCall.java
-    from_line: 36
+    source: .repos/nexmo/nexmo-java-code-snippets/src/main/java/com/nexmo/quickstart/voice/RecordCall.java
+    from_line: 39
     to_line: 68
 run_command: java-ide
 file_name: RecordCall.java

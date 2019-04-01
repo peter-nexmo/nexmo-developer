@@ -12,10 +12,9 @@ import 'babel-polyfill'
 import { TweenLite, CSSPlugin } from 'gsap'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import Collapsible from './Collapsible'
-import Scrollspy from './Scrollspy'
 import GithubCards from './GithubCards'
 import TabbedExamples from './TabbedExamples'
+import VoltaTabbedExamples from './VoltaTabbedExamples'
 import Format from './Format'
 import JsSequenceDiagrams from './JsSequenceDiagrams'
 import Navigation from './Navigation'
@@ -26,14 +25,14 @@ import Notices from './Notices'
 import Feedback from './Feedback'
 import Concatenation from './Concatenation'
 import APIStatus from './APIStatus'
-import Markdown from './Markdown'
+import CodeSnippetEvents from './CodeSnippetEvents'
+import JWTGenerator from './JWTGenerator'
 
 import {
   preventSamePage as turbolinksPreventSamePage,
   animate as turbolinksAnimate
 } from './Turbolinks'
 
-Collapsible()
 Navigation()
 Scroll()
 turbolinksPreventSamePage()
@@ -42,12 +41,19 @@ turbolinksAnimate()
 let refresh = () => {
   Notices()
   GithubCards()
-  Scrollspy()
   JsSequenceDiagrams()
   new TabbedExamples
+  new VoltaTabbedExamples
   new Format
   Modals()
   APIStatus()
+  Scroll()
+  Navigation()
+  CodeSnippetEvents()
+
+  if (document.getElementById('jwtGenerator')) {
+    ReactDOM.render(<JWTGenerator/>, document.getElementById('jwtGenerator'))
+  }
 
   if (document.getElementById('SearchComponent')) {
     ReactDOM.render(<Search/>, document.getElementById('SearchComponent'))
@@ -61,11 +67,29 @@ let refresh = () => {
     ReactDOM.render(<Concatenation/>, document.getElementById('ConcatenationComponent'))
   }
 
-  if (document.getElementById('MarkdownComponent')) {
-    ReactDOM.render(<Markdown/>, document.getElementById('MarkdownComponent'))
+  // If we're on a two pane page, make sure that the main pane is focused
+  let rightPane = document.querySelector(".Vlt-main");
+  if (rightPane) { rightPane.click(); }
+
+  Volta.init(['accordion', 'tooltip', 'tab'])
+
+  // Fix for Turbolinks scrolling to in-page anchor when navigating to a new page
+  if(window.location.hash){
+    const tag = document.getElementById(window.location.hash.slice(1))
+    if(tag){
+      tag.scrollIntoView(true);
+    }
   }
+
+  setTimeout(function() {
+    const sidebarActive = document.querySelector('.Vlt-sidemenu__link_active')
+    if(sidebarActive){
+      sidebarActive.scrollIntoView(true);
+    }
+  }, 100)
 }
 
 $(document).on('nexmo:load', function() {
-  refresh()
+  refresh();
 })
+

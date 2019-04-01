@@ -1,14 +1,7 @@
 class OpenApiDefinitionResolver
-
   def self.find(name)
-    path = paths(name).detect do |path|
-      break path if File.file? path
-    end
-
-    unless path
-      if NexmoApiSpecification::Definition.exists?(name)
-        path = NexmoApiSpecification::Definition.path(name)
-      end
+    path = paths(name).detect do |p|
+      break p if File.file? p
     end
 
     return resolve(path) if path
@@ -16,16 +9,14 @@ class OpenApiDefinitionResolver
     raise "Could not find definition '#{name}'"
   end
 
-  private
-
   def self.paths(name)
     ['json', 'yaml', 'yml'].map do |format|
-      self.path(name, format)
+      path(name, format)
     end
   end
 
   def self.path(name, format)
-    "_open_api/definitions/#{name}.#{format}"
+    "_open_api/api_specs/definitions/#{name}.#{format}"
   end
 
   def self.resolve(path)

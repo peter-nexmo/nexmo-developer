@@ -1,5 +1,6 @@
 ---
 title: Text to Speech
+description: Using our Text-To-Speech engine, you can play machine-generated speech to your callers
 navigation_weight: 3
 ---
 
@@ -68,6 +69,7 @@ Name | Language | Gender | [SSML](#ssml) support
 `Chantal` | `fr-CA` | `female` | ✅
 `Celine` | `fr-FR` | `female` | ✅
 `Mathieu` | `fr-FR` | `male` | ✅
+`Aditi` | `hi-IN` | `female` | ✅
 `Dora` | `is-IS` | `female` | ✅
 `Karl` | `is-IS` | `male` | ✅
 `Carla` | `it-IT` | `female` | ✅
@@ -89,40 +91,41 @@ Name | Language | Gender | [SSML](#ssml) support
 `Astrid` | `sv-SE` | `female` | ✅
 `Filiz` | `tr-TR` | `female` | ✅
 `Mizuki` | `ja-JP` | `female` | ✅
-`Laila` | `ara-XWW` | `female` | ❎
-`Maged` | `ara-XWW` | `male` | ❎
-`Tarik` | `ara-XWW` | `male` | ❎
-`Damayanti` | `ind-IDN` | `female` | ❎
-`Miren` | `baq-ESP` | `female` | ❎
-`Sin-Ji` | `yue-CHN` | `female` | ❎
-`Jordi` | `cat-ESP` | `male` | ❎
-`Montserrat` | `cat-ESP` | `female` | ❎
-`Iveta` | `ces-CZE` | `female` | ❎
-`Zuzana` | `ces-CZE` | `female` | ❎
-`Tessa` | `eng-ZAF` | `female` | ❎
-`Satu` | `fin-FIN` | `female` | ❎
-`Melina` | `ell-GRC` | `female` | ❎
-`Nikos` | `ell-GRC` | `male` | ❎
-`Carmit` | `heb-ISR` | `female` | ❎
-`Lekha` | `hin-IND` | `female` | ❎
-`Mariska` | `hun-HUN` | `female` | ❎
-`Sora` | `kor-KOR` | `female` | ❎
-`Tian-Tian` | `cmn-CHN` | `female` | ❎
-`Mei-Jia` | `cmn-TWN` | `female` | ❎
-`Nora` | `nor-NOR` | `female` | ❎
-`Henrik` | `nor-NOR` | `male` | ❎
-`Luciana` | `por-BRA` | `female` | ❎
-`Felipe` | `por-BRA` | `male` | ❎
-`Catarina` | `por-PRT` | `female` | ❎
-`Joana` | `por-PRT` | `female` | ❎
-`Ioana` | `ron-ROU` | `female` | ❎
-`Laura` | `slk-SVK` | `female` | ❎
-`Alva` | `swe-SWE` | `female` | ❎
-`Oskar` | `swe-SWE` | `male` | ❎
-`Kanya` | `tha-THA` | `female` | ❎
-`Cem` | `tur-TUR` | `male` | ❎
-`Yelda` | `tur-TUR` | `female` | ❎
-`Empar` | `spa-ESP` | `female` | ❎
+`Seoyeon`| `ko-KR` | `female`| ✅
+`Laila` | `ara-XWW` | `female` | ❌
+`Maged` | `ara-XWW` | `male` | ❌
+`Tarik` | `ara-XWW` | `male` | ❌
+`Damayanti` | `ind-IDN` | `female` | ❌
+`Miren` | `baq-ESP` | `female` | ❌
+`Sin-Ji` | `yue-CHN` | `female` | ❌
+`Jordi` | `cat-ESP` | `male` | ❌
+`Montserrat` | `cat-ESP` | `female` | ❌
+`Iveta` | `ces-CZE` | `female` | ❌
+`Zuzana` | `ces-CZE` | `female` | ❌
+`Tessa` | `eng-ZAF` | `female` | ❌
+`Satu` | `fin-FIN` | `female` | ❌
+`Melina` | `ell-GRC` | `female` | ❌
+`Nikos` | `ell-GRC` | `male` | ❌
+`Carmit` | `heb-ISR` | `female` | ❌
+`Lekha` | `hin-IND` | `female` | ❌
+`Mariska` | `hun-HUN` | `female` | ❌
+`Sora` | `kor-KOR` | `female` | ❌
+`Tian-Tian` | `cmn-CHN` | `female` | ❌
+`Mei-Jia` | `cmn-TWN` | `female` | ❌
+`Nora` | `nor-NOR` | `female` | ❌
+`Henrik` | `nor-NOR` | `male` | ❌
+`Luciana` | `por-BRA` | `female` | ❌
+`Felipe` | `por-BRA` | `male` | ❌
+`Catarina` | `por-PRT` | `female` | ❌
+`Joana` | `por-PRT` | `female` | ❌
+`Ioana` | `ron-ROU` | `female` | ❌
+`Laura` | `slk-SVK` | `female` | ❌
+`Alva` | `swe-SWE` | `female` | ❌
+`Oskar` | `swe-SWE` | `male` | ❌
+`Kanya` | `tha-THA` | `female` | ❌
+`Cem` | `tur-TUR` | `male` | ❌
+`Yelda` | `tur-TUR` | `female` | ❌
+`Empar` | `spa-ESP` | `female` | ❌
 
 #### Discontinued voices
 

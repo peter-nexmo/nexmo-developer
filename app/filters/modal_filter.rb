@@ -9,14 +9,19 @@ class ModalFilter < Banzai::Filter
     end
 
     modals = modals.map do |modal|
-      document = File.read("#{Rails.root}/#{modal[:document]}")
+      filename = "#{Rails.root}/#{modal[:document]}"
+      raise "Could not find modal #{filename}" unless File.exist? filename
+
+      document = File.read(filename)
       output = MarkdownPipeline.new.call(document)
 
-      <<~HEREDOC
+      modal = <<~HEREDOC
         <div class="reveal" id="#{modal[:uuid]}" data-reveal>
           #{output}
         </div>
       HEREDOC
+
+      "FREEZESTART#{Base64.urlsafe_encode64(modal)}FREEZEEND"
     end
 
     input + modals.join("\n")

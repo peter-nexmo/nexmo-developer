@@ -7,6 +7,10 @@ description: The Nexmo Call Control Objects used to manage your Voice API calls.
 
 A Nexmo Call Control Object (NCCO) is a JSON array that you use to control the flow of a Voice API call. For your NCCO to execute correctly, the JSON objects must be valid.
 
+While developing and testing NCCOs, you can use the Voice Playground to try out NCCOs interactively. You can [read more about it in the Voice API Overview](/voice/voice-api/overview#voice-playground) or [go directly to the Voice Playground in the Dashboard](https://dashboard.nexmo.com/voice/playground).
+
+## NCCO actions
+
 The order of actions in the NCCO controls the flow of the Call. Actions that have to complete before the next action can be executed are *synchronous*. Other actions are *asynchronous*. That is, they are supposed to continue over the following actions until a condition is met. For example, a `record` action terminates when the `endOnSilence` option is met. When all the actions in the NCCO are complete, the Call ends.
 
 The NCCO actions and the options and types for each action are:
@@ -14,17 +18,14 @@ The NCCO actions and the options and types for each action are:
 Action | Description | Synchronous
 -- | -- | --
 [record](#record) | All or part of a Call | No
-[conversation](#conversation) | A standard or hosted conference. | Yes
-[connect](#connect) | To a connectable endpoint such as a phone number. | Yes
+[conversation](#conversation) | Create or join an existing [Conversation](/conversation/concepts/conversation) | Yes
+[connect](#connect) | To a connectable endpoint such as a phone number or VBC extension. | Yes
 [talk](#talk) | Send synthesized speech to a Conversation. | Yes, unless *bargeIn=true*
 [stream](#stream) | Send audio files to a Conversation. | Yes, unless *bargeIn=true*
-[input ](#input) | Collect digits from the person you are calling. | Yes
+[input](#input) | Collect digits from the person you are calling. | Yes
+[notify](#notify) | Send a request to your application to track progress through an NCCO | Yes
 
-All the actions can return the following [status codes](#status-codes).
-
-> **Note**: [Connect an inbound call](/voice/voice-api/building-blocks/connect-an-inbound-call) provides an example of how to serve your NCCOs to Nexmo after a Call or Conference is initiated
-
-While developing and testing NCCOs, you can use the Voice Playground to try out NCCOs interactively. You can [read more about it in the Voice API Overview](/voice/voice-api/overview#voice-playground) or [go directly to the Voice Playground in the Dashboard](https://dashboard.nexmo.com/voice/playground).
+> **Note**: [Connect an inbound call](/voice/voice-api/code-snippets/connect-an-inbound-call) provides an example of how to serve your NCCOs to Nexmo after a Call or Conference is initiated
 
 ## Record
 
@@ -58,8 +59,9 @@ You can use the following options to control a `record` action:
 
 Option | Description | Required
  -- | -- | --
-`format` | Record the Call in a specific format.  Options are: <ul><li>`mp3`</li><li>`wav`</li></ul> The default value is `mp3`. | No
-`split` | Record the sent and received audio in separate channels of a stereo recording—set to `conversation` to enable this.| No
+`format` | Record the Call in a specific format.  Options are: <ul><li>`mp3`</li><li>`wav`</li><li>`ogg`</li></ul> The default value is `mp3`, or `wav` when recording more than 2 channels. | No
+`split` | Record the sent and received audio in separate channels of a stereo recording—set to `conversation` to enable this.|No
+`channels` | The number of channels to record (maximum `32`). If the number of participants exceeds `channels` any additional participants will be added to the last channel in file. split `conversation` must also be enabled.| No
 `endOnSilence` | Stop recording after n seconds of silence. Once the recording is stopped the recording data is sent to `event_url`. The range of possible values is 3<=`endOnSilence`<=10. | No
 `endOnKey` | Stop recording when a digit is pressed on the handset. Possible values are: `*`, `#` or any single digit e.g. `9` | No
 `timeOut` | The maximum length of a recording in seconds. One the recording is stopped the recording data is sent to `event_url`. The range of possible values is between `3` seconds and `7200` seconds (2 hours) | No
@@ -95,7 +97,7 @@ Possible return parameters are:
 
 ## Conversation
 
-You can use the `conversation` action to create standard or moderated conversations. The first person to call the virtual number assigned to the conversation creates it. This action is synchronous, the conversation lasts until the number of participants is 0.
+You can use the `conversation` action to create standard or moderated conferences, while preserving the communication context. Using `conversation` with the same `name` reuses the same persisted [Conversation](/conversation/concepts/conversation). The first person to call the virtual number assigned to the conversation creates it. This action is synchronous.
 
 > **Note**: you can invite up to 50 people to your Conversation.
 
@@ -109,34 +111,42 @@ You can use the following options to control a *conversation* action:
 
 Option | Description | Required
 -- | -- | --
-`name` | The name of the Conversation room. Names have to be unique per account. | Yes
-`musicOnHoldUrl` | A URL to the *mp3* file to stream to participants until the conversation starts. By default the conversation starts when the first person calls the virtual number associated with your Voice app. To stream this mp3 before the moderator joins the conversation, set *startOnEnter* to *false* for all users other than the moderator. | no
-`startOnEnter` | The default value of *true* ensures that the conversation starts when this caller joins  conversation [name](#conversation_name). Set to *false* for attendees in a moderated conversation. | no
-`endOnExit` | For moderated conversations, set to *true* in the moderator NCCO so the conversation is ended when the moderator hangs up. The default value of *false* means the conversation is not terminated when a caller hangs up; the conversation ends when the last caller hangs up. | no
+`name` | The name of the Conversation room. Names are namespaced to the application level. | Yes
+`musicOnHoldUrl` | A URL to the *mp3* file to stream to participants until the conversation starts. By default the conversation starts when the first person calls the virtual number associated with your Voice app. To stream this mp3 before the moderator joins the conversation, set *startOnEnter* to *false* for all users other than the moderator. | No
+`startOnEnter` | The default value of *true* ensures that the conversation starts when this caller joins conversation `name`. Set to *false* for attendees in a moderated conversation. | No
+`endOnExit` | For moderated conversations, set to *true* in the moderator NCCO so the conversation is ended when the moderator hangs up. The default value of *false* means the conversation is not terminated when a caller hangs up; the conversation ends when the last caller hangs up. | No
 `record` | Set to *true* to record this conversation. For standard conversations, recordings start when one or more attendees connects to the conversation. For moderated conversations, recordings start when the moderator joins. That is, when an NCCO is executed for the named conversation where *startOnEnter* is set to *true*. When the recording is terminated, the URL you download the recording from is sent to the event URL. <br>By default audio is recorded in MP3 format. See the [recording](/voice/voice-api/guides/recording#file-formats) guide for more details | No
-`eventUrl` | Set the URL to the webhook endpoint Nexmo calls asynchronously on each of the call [states](/api/voice#status). | No
+`eventUrl` | Set the URL to the webhook endpoint Nexmo calls asynchronously on each of the [Call States](/voice/voice-api/guides/call-flow#call-states). | No
 `eventMethod` | Set the HTTP method used to make the request to `eventUrl`. The default value is POST. | No
+`canSpeak` | A list of leg UUIDs that this participant can be heard by. If not provided, the participant can be heard by everyone. If an empty list is provided, the participant will not be heard by anyone | No
+`canHear` | A list of leg UUIDs that this participant can hear. If not provided, the participant can hear everyone. If an empty list is provided, the participant will not hear any other participants| No
 
 ## Connect
 
-You can use the `connect` action to connect a call to endpoints such as phone numbers.
+You can use the `connect` action to connect a call to endpoints such as phone numbers or a VBC extension.
 
 This action is synchronous, after a *connect* the next action in the NCCO stack is processed. A connect action ends when the endpoint you are calling is busy or unavailable. You ring endpoints sequentially by nesting connect actions.
+
+The following NCCO examples show how to configure different types of connections.
+
+```tabbed_content
+source: '/_examples/voice/guides/ncco-reference/connect'
+```
 
 You can use the following options to control a `connect` action:
 
 Option | Description | Required
 -- | -- | --
-`endpoint` | Connect to a single endpoint. [Available endpoint types](#endpoint-types) | Yes
-`from` | A number in [E.164](https://en.wikipedia.org/wiki/E.164) format that identifies the caller.§§ This must be one of your Nexmo virtual numbers, another value will result in the caller ID being unknown. | No
-`eventType` | Set to `synchronous` to: <ul markdown="1"><li>make the `connect` action synchronous</li><li>enable `eventUrl` to return an NCCO that overrides the current NCCO when a call moves to specific states. See the [Connect with fallback NCCO example](#connect-with-fallback-ncco).</li></ul> | No
+`endpoint` | Connect to a single endpoint. [Available endpoint types](#endpoint-types-and-values) | Yes
+`from` | A number in [E.164](https://en.wikipedia.org/wiki/E.164) format that identifies the caller.§§ This must be one of your Nexmo virtual numbers, another value will result in the caller ID being unknown. If the caller is an app user, this option should be omitted.| No
+`eventType` | Set to `synchronous` to: <ul class="Vlt-list Vlt-list--simple"><li>make the `connect` action synchronous</li><li>enable `eventUrl` to return an NCCO that overrides the current NCCO when a call moves to specific states.</li></ul> | No
 `timeout` |  If the call is unanswered, set the number in seconds before Nexmo stops ringing `endpoint`. The default value is `60`.
 `limit` | Maximum length of the call in seconds. The default and maximum value is `7200` seconds (2 hours). | No
-`machineDetection` | Configure the behavior when Nexmo detects that a destination is an answerphone. Set to either: <ul markdown="1"><li>`continue` - Nexmo sends an HTTP request to `event_url` with the Call event `machine`</li><li>`hangup` - end the Call</li></ul>   |
-`eventUrl` | Set the webhook endpoint that Nexmo calls asynchronously on each of the possible [Call states](/api/voice#status). If `eventType` is set to `synchronous` the `eventUrl` can return an NCCO that overrides the current NCCO when a timeout occurs. | No
+`machineDetection` | Configure the behavior when Nexmo detects that a destination is an answerphone. Set to either: <ul class="Vlt-list Vlt-list--simple"><li>`continue` - Nexmo sends an HTTP request to `event_url` with the Call event `machine`</li><li>`hangup` - end the Call</li></ul>   |
+`eventUrl` | Set the webhook endpoint that Nexmo calls asynchronously on each of the possible [Call States](/voice/voice-api/guides/call-flow#call-states). If `eventType` is set to `synchronous` the `eventUrl` can return an NCCO that overrides the current NCCO when a timeout occurs. | No
 `eventMethod` | The HTTP method Nexmo uses to make the request to <i>eventUrl</i>. The default value is `POST`. | No
 
-### Endpoint Types
+### Endpoint Types and Values
 
 #### Phone - phone numbers in e.164 format
 
@@ -146,156 +156,32 @@ Value | Description
 `dtmfAnswer` | Set the digits that are sent to the user as soon as the Call is answered. The * and # digits are respected. You create pauses using p. Each pause is 500ms.
 `onAnswer` | An object containing a `url` key. The URL serves an NCCO to execute in the connected number before the call is joined to your existing conversation
 
+#### app - Connect the call to an app
+
+Value | Description
+-- | --
+`user` | the username of the user to connect to. This username must have been [added as a user](/api/conversation#createUser)
+
 #### Websocket - the websocket to connect to
 
 Value | Description
 -- | --
 `uri` | the URI to the websocket you are streaming to.
 `content-type` | the internet media type for the audio you are streaming. Possible values are: `audio/l16;rate=16000`
-`headers` | a JSON object containing any metadata you want.
+`headers` | a JSON object containing any metadata you want. See [connecting to a websocket](/voice/voice-api/guides/websockets#connecting-to-a-websocket) for example headers
 
 #### sip - the sip endpoint to connect to
 
 Value | Description
 -- | --
-`uri` | the SIP URI to the endpoint you are connecting to in the format sip:rebekka@sip.example.com.
+`uri` | the SIP URI to the endpoint you are connecting to in the format `sip:rebekka@sip.example.com`.
+`headers` | `key` => `value` string pairs containing any metadata you need e.g. `{ "location": "New York City", "occupation": "developer" }`
 
-#### Examples
+#### vbc - the Vonage Business Cloud (VBC) extension to connect to
 
-The following NCCO examples show how to configure different types of connection:
-
-* [Connect to a PSTN endpoint](#connect-to-a-pstn-endpoint)
-* [Connect to a WebSocket endpoint](#connect-to-a-websocket-endpoint)
-* [Connect with fallback NCCO](#connect-with-fallback-ncco)
-* [Connect to a SIP endpoint](#connect-to-a-sip-endpoint)
-* [Recorded proxy call](#recorded-proxy-call)
-
-#### Connect to a PSTN endpoint
-
-```json
-[
-  {
-    "action": "talk",
-    "text": "Please wait while we connect you"
-  },
-  {
-    "action": "connect",
-    "eventUrl": ["https://example.com/events"],
-    "timeout": "45",
-    "from": "447700900000",
-    "endpoint": [
-      {
-        "type": "phone",
-        "number": "447700900001",
-        "dtmfAnswer": "2p02p"
-      }
-    ]
-  }
-]
-```
-
-#### Connect to a WebSocket endpoint
-
-```json
-[
-  {
-    "action": "talk",
-    "text": "Please wait while we connect you"
-  },
-  {
-    "action": "connect",
-    "eventUrl": [
-      "https://example.com/events"
-    ],
-    "from": "447700900000",
-    "endpoint": [
-    {
-      "type": "websocket",
-      "uri": "ws://example.com/socket",
-      "content-type": "audio/l16;rate=16000",
-      "headers": {
-        "whatever": "metadata_you_want"
-      }
-      }
-    ]}
-]
-```
-
-#### Connect with fallback NCCO
-
-You can provide a fallback for Calls that do not connect. To do this set the `eventType` to `synchronous` and return an NCCO from the `eventUrl` if the Call enters any of the following states:
-
-* `timeout` - your user did not answer your call with `ringing_timer` seconds
-* `failed` - the call failed to complete
-* `rejected` - the call was rejected
-* `unanswered` - the call was not answered
-* `busy` - the person being called was on another call
-
-```json
-[
-  {
-    "action": "connect",
-    "from": "447700900000",
-    "timeout": 5,
-    "eventType": "synchronous",
-    "eventUrl": [
-      "https://example.com/event-fallback"
-    ],
-    "endpoint": [
-      {
-        "type": "phone",
-        "number": "447700900001"
-      }
-    ]
-  }
-]
-```
-
-#### Connect to a SIP endpoint
-
-```json
-[
-  {
-    "action": "talk",
-    "text": "Please wait while we connect you"
-  },
-  {
-    "action": "connect",
-    "eventUrl": [
-      "https://example.com/events"
-    ],
-    "from": "447700900000",
-    "endpoint": [
-      {
-        "type": "sip",
-        "uri": "sip:rebekka@sip.mcrussell.com"
-      }
-    ]
-  }
-]
-```
-
-#### Recorded proxy call
-
-```json
-[
-  {
-    "action": "record",
-    "eventUrl": ["https://example.com/recordings"]
-  },
-  {
-    "action": "connect",
-    "eventUrl": ["https://example.com/events"],
-    "from": "447700900000",
-    "endpoint": [
-      {
-        "type": "phone",
-        "number": "447700900001"
-      }
-    ]
-  }
-]
-```
+Value | Description
+-- | --
+`extension` | the VBC extension to connect the call to.
 
 ## Talk
 
@@ -359,9 +245,9 @@ WAV:
 * G.711 A-law/u-law
 * Microsoft GSM
 
-## `input`
+## Input
 
-You can use the `input` action to collect digits input by the person you are calling. This action is synchronous, Nexmo processes the input and forwards it in the [parameters](#Input-Return-Parameters) sent to the `eventURL` webhook endpoint you configure in your request. Your webhook endpoint should return another NCCO that replaces the existing NCCO and controls the Call based on the user input. You could use this functionality to create an Interactive Voice Response (IVR). For example, if your user presses *4*, you return a [connect](#connect) NCCO that forwards the call to your sales department.
+You can use the `input` action to collect digits input by the person you are calling. This action is synchronous, Nexmo processes the input and forwards it in the [parameters](#input-return-parameters) sent to the `eventURL` webhook endpoint you configure in your request. Your webhook endpoint should return another NCCO that replaces the existing NCCO and controls the Call based on the user input. You could use this functionality to create an Interactive Voice Response (IVR). For example, if your user presses *4*, you return a [connect](#connect) NCCO that forwards the call to your sales department.
 
 The following NCCO example shows how to configure an IVR endpoint:
 
@@ -423,5 +309,30 @@ Name | Description
 -- | --
 `uuid` | The unique ID of the Call leg for the user initiating the input.
 `conversation_uuid` | The unique ID for this conversation.
-`timed_out` | Returns `true` if this input timed out based on the value of [timeOut](#timeOut).
+`timed_out` | Returns `true` if this input timed out based on the value of `timeOut`.
 `dtmf` | The numbers input by your callee, in order.
+
+## Notify
+
+Use the `notify` action to send a custom payload to your event URL
+
+```json
+[
+  {
+    "action": "notify",
+    "payload": {
+      "foo": "bar"
+    },
+    "eventUrl": [
+      "https://example.com/webhooks/event"
+    ],
+    "eventMethod": "POST"
+  }
+]
+```
+
+Option | Description | Required
+-- | -- | --
+`payload` | The JSON body to send to your event URL | Yes
+`eventUrl` | The URL to send events to. If you return an NCCO when you receive a notification, it will replace the current NCCO | Yes
+`eventMethod` | The HTTP method to use when sending `payload` to your `eventUrl` | No

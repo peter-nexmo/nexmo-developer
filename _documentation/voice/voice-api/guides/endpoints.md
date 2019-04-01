@@ -1,5 +1,6 @@
 ---
 title: Endpoints
+description: When connecting a call, you can connect to another phone number, a `sip` endpoint or a `websocket`. These are known as endpoints.
 navigation_weight: 5
 ---
 
@@ -7,7 +8,7 @@ navigation_weight: 5
 
 ## Overview
 
-Endpoints are a term used with the Nexmo Voice API to describe the different destinations a call could be connected to. Each endpoint type has its own addressing format and other related metadata that can be sent along with the call. The most common type of endpoint used is `phone`, which is for making phone calls to regular phone numbers anywhere in the world. This network of phones is known as the Public Switched Telepone Network (PSTN).
+Endpoints are a term used with the Nexmo Voice API to describe the different destinations a call could be connected to. Each endpoint type has its own addressing format and other related metadata that can be sent along with the call. The most common type of endpoint used is `phone`, which is for making phone calls to regular phone numbers anywhere in the world. This network of phones is known as the Public Switched Telephone Network (PSTN).
 
 ## Phone
 
@@ -38,3 +39,7 @@ An optional `headers` parameter can be passed containing a JSON object of key va
 ## CallerID
 
 For both `phone` and `sip` endpoint types, the `from` field *must* be a Nexmo Number associated with your account in e.164 format. This will then be used as the caller ID on the receiving phone. For SIP endpoints it will take the format `number@sip.nexmo.com`.
+
+## Vonage Business Cloud
+
+The `vbc` endpoint enables you to connect an inbound call on a Vonage Business Cloud (VBC) programmable number to the VBC extension you specify in the `extension` property of the endpoint.

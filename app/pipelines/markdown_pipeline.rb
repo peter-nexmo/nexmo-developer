@@ -15,8 +15,8 @@ class MarkdownPipeline < Banzai::Pipeline
       TooltipFilter,
       CollapsibleFilter,
       TabFilter.new(options),
-      BuildingBlocksFilter,
-      BuildingBlockFilter,
+      CodeSnippetsFilter.new(options),
+      CodeSnippetFilter.new(options),
       CodeFilter,
       IndentFilter,
       ModalFilter,
@@ -24,18 +24,21 @@ class MarkdownPipeline < Banzai::Pipeline
       PartialFilter.new(options),
       TechioFilter,
       TutorialsFilter,
+      CodeSnippetListFilter,
+      ConceptListFilter,
       LanguageFilter,
       ColumnsFilter,
-      MarkdownFilter,
+      MarkdownFilter.new(options),
 
       # As HTML
       UserPersonalizationFilter.new(options),
       HeadingFilter,
-      LabelFilter,
+      LabelFilter.new(options),
       BreakFilter,
       UnfreezeFilter,
       IconFilter,
-      ExternalLinkFilter
+      ExternalLinkFilter,
+      TutorialLinkFilter
     )
   end
 end

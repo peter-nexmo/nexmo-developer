@@ -4,7 +4,10 @@ services:
   - postgresql
 addons:
   postgresql: '9.4'
-install: bundle install --deployment --path vendor/bundle
+before_install:
+  - gem update --system
+  - gem update bundler
+install: bundle install --deployment --path vendor/bundle && yarn install
 before_script:
   - |
     if [ -z "$SSH_KEY_REQUIRED" ]; then
@@ -19,8 +22,10 @@ before_script:
              "  IdentityFile $SSH_FILE" \
              "  LogLevel ERROR" >> ~/.ssh/config
     fi
-  - gem update --system
   - bundle exec rake db:setup
 script:
   - bundle exec rake spec
-  - bundle exec rake test:rubocop
+  - bundle exec rubocop
+  - bundle exec rake ci:verify_pages
+  - bundle exec rake ci:verify_navigation
+  - bundle exec rake ci:verify_oas_reference

@@ -4,6 +4,8 @@
 # or operating system, you probably want to add a global ignore instead:
 #   git config --global core.excludesfile '~/.gitignore_global'
 
+.DS_Store
+
 # Ignore bundler config.
 /.bundle
 
@@ -12,6 +14,7 @@
 /tmp/*
 !/log/.keep
 !/tmp/.keep
+.idea/
 
 # Ignore Byebug command history file.
 .byebug_history
@@ -21,3 +24,8 @@
 /node_modules
 /public/packs-test
 config/algolia.yml
+
+.vscode/*
+coverage
+
+.DS_Store

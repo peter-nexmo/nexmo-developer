@@ -25,6 +25,11 @@ class ApiController < ApplicationController
 
   private
 
+  def set_code_language
+    return if request.params[:code_language] == 'templates'
+    super
+  end
+
   def set_navigation
     @navigation = :api
 
@@ -37,8 +42,10 @@ class ApiController < ApplicationController
   end
 
   def set_document
-    if params[:code_language] == "ncco"
-      @document = "voice/ncco"
+    if params[:code_language] == 'templates'
+      @document = 'verify/templates'
+    elsif params[:code_language] == 'ncco'
+      @document = 'voice/ncco'
     else
       @document = params[:document]
     end

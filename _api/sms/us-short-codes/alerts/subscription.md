@@ -4,6 +4,10 @@ description: Reference guide for the Campaign Subscription Management.
 api: Alerts API - Subscribing
 ---
 
+```partial
+source: _partials/discontinued-alert-shortcode.md
+```
+
 # Alerts - Subscribing API Reference
 
 This defines the API for Campaign Subscription Management:
@@ -60,6 +64,8 @@ The following table shows the parameters you use in the request:
 Parameter | Description | Required
 -- | -- | --
 `msisdn` | The phone number to resubscribe to your campaign and remove from the opt-out list. | If Your base URL contains `https://rest.nexmo.com/sc/us/alert/opt-in/manage`.
+`page-size` | Return this amount of results in the response. The default value is 100. | No
+`page` | Return `page-size` results from this zero-based index in the response. If your request returns 300 Calls, set `page` to 2 in order to return Calls 201 to 300. The default value is 0. | No
 
 ## Authentication information
 
@@ -101,7 +107,7 @@ You submit all requests with a [POST] or [GET] call using UTF-8 encoding and URL
 
 Each [request](#request) you make using this API returns a:
 
-* [Response](#keys) - the status of your request to Nexmo in [JSON or XML](#base) format.
+* [Response](#keys-and-values) - the status of your request to Nexmo in [JSON or XML format](#format).
 
 The response is returned either:
 
@@ -111,7 +117,7 @@ The response is returned either:
 Each response comes:
 
 * In a specific [Format](#format)
-* With [Keys and values](#keys)
+* With [Keys and values](#keys-and-values)
 
 
 ### Format
@@ -126,8 +132,7 @@ source: '_examples/api/us-short-codes/alerts/subscription/response-format/1'
 source: '_examples/api/us-short-codes/alerts/subscription/response-format/2'
 ```
 
-
-###Keys and Values
+### Keys and Values
 
 The response contains the following keys and values:
 

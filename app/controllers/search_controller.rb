@@ -15,22 +15,18 @@ class SearchController < ApplicationController
     redirect_to root_path unless params['query']
   end
 
-  def get_results
+  def get_results # rubocop:disable Naming/AccessorMethodName
     return unless params['query']
 
     parameters = ALGOLIA_CONFIG.keys.map do |index|
       {
         index_name: index,
         query: params['query'],
-        hitsPerPage: 20
+        hitsPerPage: 20,
       }
     end
 
     Algolia.multiple_queries(parameters)
-  end
-
-  def search_error
-    render 'search_error'
   end
 
   def check_search_is_enabled

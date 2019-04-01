@@ -1,21 +1,23 @@
 class MarkdownController < ApplicationController
-  before_action :set_navigation, except: [:preview]
+  before_action :set_navigation
   before_action :set_product
   before_action :set_document
   before_action :set_namespace
 
-  skip_before_action :verify_authenticity_token, only: [:preview]
-
   def show
+    redirect = Redirector.find(request)
+    return redirect_to redirect if redirect
+
     @frontmatter = YAML.safe_load(document)
 
     raise Errno::ENOENT if @frontmatter['redirect']
 
-    @document_title = @frontmatter['title']
+    @document_title = @frontmatter['meta_title'] || @frontmatter['title']
 
     @content = MarkdownPipeline.new({
       code_language: @code_language,
       current_user: current_user,
+      disable_label_filter: params[:namespace].present? # Disable if we're in the contribute section
     }).call(document)
 
     if !Rails.env.development? && @frontmatter['wip']
@@ -31,16 +33,8 @@ class MarkdownController < ApplicationController
     if redirect
       redirect_to redirect
     else
-      render 'static/404', status: :not_found, formats: [:html]
+      render_not_found
     end
-  end
-
-  def preview
-    return render 'preview', layout: 'page-full' if request.method == 'GET'
-
-    content = MarkdownPipeline.new.call(params['markdown'])
-
-    render json: { html: content }
   end
 
   private
@@ -71,11 +65,10 @@ class MarkdownController < ApplicationController
 
   def set_document_path_when_file_name_is_the_same_as_a_linkable_code_language
     path = "#{@namespace_path}/#{@document}/#{params[:code_language]}.md"
-    if File.exist? path
-      @document_path = path
-      [params, request.parameters].each { |o| o.delete(:code_language) }
-      @code_language = nil
-    end
+    return unless File.exist? path
+    @document_path = path
+    [params, request.parameters].each { |o| o.delete(:code_language) }
+    @code_language = nil
   end
 
   def document
